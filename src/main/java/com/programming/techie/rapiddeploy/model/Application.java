@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Application {
     @Id
     private String id;
+    private String name;
     private String deployedUrl;
     private ApplicationState applicationState;
     private String gitUrl;

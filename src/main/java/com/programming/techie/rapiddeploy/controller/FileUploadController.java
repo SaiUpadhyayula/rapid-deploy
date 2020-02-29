@@ -9,17 +9,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping
+@RequestMapping("/api/files")
 @AllArgsConstructor
 @Slf4j
 public class FileUploadController {
 
     private FileUploadService fileUploadService;
 
-    @PostMapping("/api/{appName}/files")
-    public ResponseEntity<Void> upload(@RequestParam("file") MultipartFile file, @PathVariable String appName) {
-        log.info("Uploading file");
+    @PostMapping("/{appName}")
+    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file, @PathVariable String appName) {
         fileUploadService.upload(file, appName);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body("File Upload Successful");
     }
 }

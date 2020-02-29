@@ -9,8 +9,9 @@ import static org.springframework.util.StringUtils.cleanPath;
 @UtilityClass
 public class FileUtils {
 
-    public static final String UPLOAD_DIR = "/user-files";
-    public static final String UNZIPPED_DIR = "/unzipped-files";
+    public static final String UPLOAD_DIR = "user-files";
+    public static final String UNZIPPED_DIR = "unzipped-files";
+    public static final String MANIFEST_FILE = "manifest.yml";
 
     public static String extractFileName(MultipartFile file) {
         checkNotNull(file);

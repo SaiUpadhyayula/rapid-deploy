@@ -1,6 +1,8 @@
 package com.programming.techie.rapiddeploy.service;
 
 import com.programming.techie.rapiddeploy.exceptions.FileStorageException;
+import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
+import com.programming.techie.rapiddeploy.util.FileUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import java.nio.file.Paths;
 import static com.programming.techie.rapiddeploy.util.FileUtils.UPLOAD_DIR;
 import static com.programming.techie.rapiddeploy.util.FileUtils.extractFileName;
 import static java.nio.file.Files.copy;
+import static java.nio.file.Files.find;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 @Service
@@ -21,7 +24,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 @Slf4j
 public class FileStorageService {
 
-    public void upload(MultipartFile file) {
+    public String upload(MultipartFile file) {
         String fileName = extractFileName(file);
         checkForInvalidCharactersInFileName(fileName);
         Path targetLocation = createTargetDir(fileName);
@@ -30,6 +33,14 @@ public class FileStorageService {
         } catch (IOException e) {
             throw new FileStorageException("Exception Occurred when copying file");
         }
+        return targetLocation.toAbsolutePath().toString();
+    }
+
+    public Path findFile(Path extractedFilePath, String fileName) throws IOException {
+        return find(extractedFilePath, 1,
+                ((path, basicFileAttributes) -> path.getFileName().toString()
+                        .equals(fileName)))
+                .findAny().orElseThrow(() -> new RapidDeployException("Cannot find manifest.yml file inside the folder, Please Check"));
     }
 
     private Path createTargetDir(String fileName) {

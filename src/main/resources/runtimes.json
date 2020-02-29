@@ -1,0 +1,9 @@
+{
+  "java": [{
+    "8": "openjdk:8-jdk-alpine"
+  },
+    {
+      "13": "openjdk:13-alpine"
+    }
+  ]
+}
