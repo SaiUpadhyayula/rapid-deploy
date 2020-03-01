@@ -1,5 +1,9 @@
 package com.programming.techie.rapiddeploy.model;
 
+import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
+
+import java.util.Arrays;
+
 public enum SupportedLanguage {
     JAVA("java"),
     NODEJS("node-js"),
@@ -15,5 +19,12 @@ public enum SupportedLanguage {
 
     public String getValue() {
         return value;
+    }
+
+    public static SupportedLanguage lookup(String value) {
+        return Arrays.stream(SupportedLanguage.values())
+                .filter(enumValue -> enumValue.getValue().equals(value))
+                .findAny()
+                .orElseThrow(() -> new RapidDeployException("Cannot find enumeration for value - " + value));
     }
 }

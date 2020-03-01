@@ -49,7 +49,7 @@ public class FileExtractedListener {
     }
 
     private void validateManifestDefinition(ManifestDefinition manifestDefinition) {
-        if (!manifestDefinition.getLanguage().equals(SupportedLanguage.JAVA.toString())) {
+        if (!manifestDefinition.getLanguage().equals(SupportedLanguage.JAVA.getValue())) {
             throw new RapidDeployException(manifestDefinition.getLanguage() + " is not supported!! We only support Java for now");
         }
     }

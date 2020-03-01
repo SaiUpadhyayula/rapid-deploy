@@ -22,7 +22,6 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.nio.file.Files.find;
 import static java.nio.file.Files.readAllBytes;
 
 @Service
@@ -30,7 +29,7 @@ import static java.nio.file.Files.readAllBytes;
 @Slf4j
 public class YamlParsingCompletedListener {
 
-    private Map<SupportedLanguage, DockerfileFactory> dockerfileFactoryMap;
+    private final Map<SupportedLanguage, DockerfileFactory> dockerfileFactoryMap;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @PostConstruct
@@ -44,16 +43,19 @@ public class YamlParsingCompletedListener {
 
     @EventListener
     public void handle(YamlParsingCompleted yamlParsingCompleted) {
-        // Determine which Base Image we need to use in the Dockerfile
         String baseImage = determineBaseImage(yamlParsingCompleted);
         Path extractedFilePath = yamlParsingCompleted.getExtractedFilePath();
 
-        SupportedLanguage supportedLanguage = SupportedLanguage.valueOf(yamlParsingCompleted.getManifestDefinition().getLanguage());
+        SupportedLanguage supportedLanguage = SupportedLanguage.lookup(yamlParsingCompleted.getManifestDefinition().getLanguage());
         DockerfileFactory dockerfileFactory = dockerfileFactoryMap.get(supportedLanguage);
         String dockerFileContent = dockerfileFactory.createDockerFileContent(extractedFilePath, baseImage);
-        File dockerFile = dockerfileFactory.createDockerFile(dockerFileContent);
+        File dockerFile = createDockerFile(extractedFilePath, dockerFileContent);
 
         applicationEventPublisher.publishEvent(new DockerfileCreated(dockerFile));
+    }
+
+    private File createDockerFile(Path extractedFilePath, String dockerFileContent) {
+        return null;
     }
 
     private String determineBaseImage(YamlParsingCompleted yamlParsingCompleted) {

@@ -12,9 +12,4 @@ public class PhpDockerfileFactory implements DockerfileFactory {
     public String createDockerFileContent(Path extractedFilePath, String baseImage) {
         return null;
     }
-
-    @Override
-    public File createDockerFile(String content) {
-        return null;
-    }
 }
