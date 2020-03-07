@@ -17,18 +17,12 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 @Slf4j
 public class SourceCodeUploadController {
 
-    private SourceCodeUploadService sourceCodeUploadService;
+    private final SourceCodeUploadService sourceCodeUploadService;
 
     @PostMapping("/{appName}")
     public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file, @PathVariable String appName) {
         sourceCodeUploadService.upload(file, appName);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("Source Code Uploaded and Built Successfully!");
-    }
-
-    @ExceptionHandler(RapidDeployException.class)
-    public ResponseEntity<String> handleException(Exception exception) {
-        return ResponseEntity.status(INTERNAL_SERVER_ERROR)
-                .body(exception.getMessage());
     }
 }

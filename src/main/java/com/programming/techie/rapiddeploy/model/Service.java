@@ -9,8 +9,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(value = "ApplicationService")
-public class ApplicationService {
+@Document(value = "Service")
+public class Service {
     @Id
     private String id;
     private String name;
