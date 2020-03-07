@@ -1,7 +1,0 @@
-FROM %s
-RUN mkdir /app
-WORKDIR /app
-COPY %s /app
-ENV PORT %s
-EXPOSE %s
-CMD ["%s"]

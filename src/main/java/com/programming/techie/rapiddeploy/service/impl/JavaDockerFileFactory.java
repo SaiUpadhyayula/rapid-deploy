@@ -26,7 +26,7 @@ public class JavaDockerFileFactory implements DockerfileFactory {
 
     private ImmutableList<String> rootFileList = ImmutableList.of(POM_XML, BUILD_GRADLE);
     private ImmutableMap<String, String> buildCommandMap = ImmutableMap.<String, String>builder()
-            .put(POM_XML, "mvn -B clean install -DskipTests")
+            .put(POM_XML, "./mvnw -B clean install -DskipTests")
             .put(BUILD_GRADLE, "./gradlew stage")
             .build();
 
@@ -41,8 +41,15 @@ public class JavaDockerFileFactory implements DockerfileFactory {
         }
 
         String buildCommand = buildCommandMap.get(rootFile);
-
-        return buildCommandMap.get(rootFile);
+        String dockerFile =
+                "FROM %s" + System.lineSeparator() +
+                        "RUN mkdir /app" + System.lineSeparator() +
+                        "WORKDIR /app" + System.lineSeparator() +
+                        "COPY . /app" + System.lineSeparator() +
+                        "ENV PORT %s" + System.lineSeparator() +
+                        "EXPOSE %s" + System.lineSeparator() +
+                        "CMD %s";
+        return String.format(dockerFile, baseImage, 8080, 8080, buildCommand);
     }
 
     @SneakyThrows

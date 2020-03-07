@@ -7,6 +7,7 @@ import com.programming.techie.rapiddeploy.model.SupportedLanguage;
 import com.programming.techie.rapiddeploy.service.DockerfileFactory;
 import com.programming.techie.rapiddeploy.service.impl.*;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,7 +19,9 @@ import org.springframework.util.ResourceUtils;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,8 +57,10 @@ public class YamlParsingCompletedListener {
         applicationEventPublisher.publishEvent(new DockerfileCreated(dockerFile));
     }
 
+    @SneakyThrows
     private File createDockerFile(Path extractedFilePath, String dockerFileContent) {
-        return null;
+        Path dockerFilePath = Paths.get(extractedFilePath.toAbsolutePath().toString() + File.separator + "Dockerfile").toAbsolutePath();
+        return Files.write(dockerFilePath, dockerFileContent.getBytes()).toFile();
     }
 
     private String determineBaseImage(YamlParsingCompleted yamlParsingCompleted) {
