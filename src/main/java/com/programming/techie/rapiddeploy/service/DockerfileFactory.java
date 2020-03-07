@@ -1,6 +1,5 @@
 package com.programming.techie.rapiddeploy.service;
 
-import java.io.File;
 import java.nio.file.Path;
 
 public interface DockerfileFactory {
