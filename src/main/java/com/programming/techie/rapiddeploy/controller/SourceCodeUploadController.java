@@ -1,6 +1,5 @@
 package com.programming.techie.rapiddeploy.controller;
 
-import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.service.SourceCodeUploadService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestController
 @RequestMapping("/api/source-code")
