@@ -1,7 +1,6 @@
 package com.programming.techie.rapiddeploy.service;
 
 import com.programming.techie.rapiddeploy.events.FileUploaded;
-import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.repository.ApplicationRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,7 @@ import java.util.Objects;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class FileUploadService {
+public class SourceCodeUploadService {
     private final ApplicationRepository applicationRepository;
     private final FileStorageService fileStorageService;
     private final ApplicationEventPublisher applicationEventPublisher;
@@ -27,4 +26,6 @@ public class FileUploadService {
         String fileName = Objects.requireNonNull(file.getOriginalFilename()).replace(".zip", "");
         applicationEventPublisher.publishEvent(new FileUploaded(appName, fullFileName, fileName));
     }
+
+
 }

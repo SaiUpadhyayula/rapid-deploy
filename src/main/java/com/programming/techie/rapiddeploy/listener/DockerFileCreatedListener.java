@@ -2,11 +2,13 @@ package com.programming.techie.rapiddeploy.listener;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.model.Container;
+import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
+import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.programming.techie.rapiddeploy.events.DockerfileCreated;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.List;
 @Slf4j
 public class DockerFileCreatedListener {
 
+    @SneakyThrows
     @EventListener
     public void handle(DockerfileCreated dockerfileCreated) {
         DockerClient dockerClient = DockerClientBuilder.getInstance("tcp://localhost:2375").build();
