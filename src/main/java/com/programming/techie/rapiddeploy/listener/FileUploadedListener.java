@@ -24,7 +24,7 @@ public class FileUploadedListener {
     @EventListener
     public void handle(FileUploaded fileUploaded) {
         String fullFileName = extractZipFile(fileUploaded);
-        applicationEventPublisher.publishEvent(new FileExtracted(fileUploaded.getAppName(), Paths.get(fullFileName)));
+        applicationEventPublisher.publishEvent(new FileExtracted(fileUploaded.getGuid(), Paths.get(fullFileName)));
     }
 
     private String extractZipFile(FileUploaded fileUploaded) {

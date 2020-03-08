@@ -11,4 +11,5 @@ import java.nio.file.Path;
 public class YamlParsingCompleted {
     private ManifestDefinition manifestDefinition;
     private Path extractedFilePath;
+    private String appGuid;
 }

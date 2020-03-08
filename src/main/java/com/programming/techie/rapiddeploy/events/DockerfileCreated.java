@@ -11,4 +11,5 @@ import java.io.File;
 @NoArgsConstructor
 public class DockerfileCreated {
     private File file;
+    private String appGuid;
 }

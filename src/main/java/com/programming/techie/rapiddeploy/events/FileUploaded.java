@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FileUploaded {
-    private String appName;
+    private String guid;
     private String fullFileName;
     private String fileName;
 }

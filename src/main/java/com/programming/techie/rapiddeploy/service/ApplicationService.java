@@ -28,16 +28,22 @@ public class ApplicationService {
                 .name(applicationName)
                 .guid(UUID.randomUUID().toString())
                 .build();
+        applicationRepository.save(application);
         return applicationMapper.map(application);
     }
 
     public List<ApplicationResponse> getAll() {
-        return applicationRepository.findAll().stream().map(applicationMapper::map).collect(Collectors.toList());
+        return applicationRepository.findAll()
+                .stream()
+                .map(applicationMapper::map)
+                .collect(Collectors.toList());
     }
 
     public ApplicationResponse getOne(String guid) {
         return applicationRepository.findByGuid(guid)
-                .orElseThrow(() -> new RapidDeployException("No Application found with guid - " + guid));
+                .map(applicationMapper::map)
+                .orElseThrow(() -> new RapidDeployException("No Application found " +
+                        "with guid - " + guid));
     }
 
     public void delete(String guid) {

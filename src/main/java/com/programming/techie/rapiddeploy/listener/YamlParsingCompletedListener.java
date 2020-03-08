@@ -54,7 +54,7 @@ public class YamlParsingCompletedListener {
         String dockerFileContent = dockerfileFactory.createDockerFileContent(extractedFilePath, baseImage);
         File dockerFile = createDockerFile(extractedFilePath, dockerFileContent);
 
-        applicationEventPublisher.publishEvent(new DockerfileCreated(dockerFile));
+        applicationEventPublisher.publishEvent(new DockerfileCreated(dockerFile, yamlParsingCompleted.getAppGuid()));
     }
 
     @SneakyThrows

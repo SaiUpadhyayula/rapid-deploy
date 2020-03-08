@@ -10,6 +10,6 @@ import java.nio.file.Path;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FileExtracted {
-    private String appName;
+    private String guid;
     private Path extractedFilePath;
 }

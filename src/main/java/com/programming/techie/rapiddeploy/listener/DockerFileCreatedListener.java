@@ -2,28 +2,29 @@ package com.programming.techie.rapiddeploy.listener;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.model.Container;
-import com.github.dockerjava.api.model.Frame;
-import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
-import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.programming.techie.rapiddeploy.events.DockerfileCreated;
+import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
+import com.programming.techie.rapiddeploy.model.Application;
+import com.programming.techie.rapiddeploy.repository.ApplicationRepository;
+import com.programming.techie.rapiddeploy.service.DockerClientManager;
+import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-
 @Service
 @Slf4j
+@AllArgsConstructor
 public class DockerFileCreatedListener {
+
+    private final ApplicationRepository applicationRepository;
 
     @SneakyThrows
     @EventListener
     public void handle(DockerfileCreated dockerfileCreated) {
-        DockerClient dockerClient = DockerClientBuilder.getInstance("tcp://localhost:2375").build();
+        DockerClient dockerClient = DockerClientManager.getClient();
         log.info("Building Docker Image..");
         String imageId = dockerClient.buildImageCmd()
                 .withDockerfile(dockerfileCreated.getFile())
@@ -32,16 +33,15 @@ public class DockerFileCreatedListener {
                 .exec(new BuildImageResultCallback())
                 .awaitImageId();
         log.info("Completed Building Docker Image.");
-        List<Container> containers = dockerClient.listContainersCmd()
-                .withShowSize(true)
-                .withShowAll(true)
-                .withStatusFilter(Collections.singleton("exited")).exec();
-        for (Container container : containers) {
-            log.info(container.getImageId());
-        }
 
         CreateContainerResponse container = dockerClient.createContainerCmd(imageId).exec();
         dockerClient.startContainerCmd(container.getId()).exec();
         log.info("Container ID - " + container.getId());
+
+        String appGuid = dockerfileCreated.getAppGuid();
+        Application application = applicationRepository.findByGuid(appGuid)
+                .orElseThrow(() -> new RapidDeployException("No Application found with GUID " + appGuid));
+        application.setContainerId(container.getId());
+        applicationRepository.save(application);
     }
 }

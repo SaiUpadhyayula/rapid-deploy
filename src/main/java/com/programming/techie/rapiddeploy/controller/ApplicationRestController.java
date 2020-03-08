@@ -30,8 +30,8 @@ public class ApplicationRestController {
         return ResponseEntity.status(OK).body(applicationService.getAll());
     }
 
-    @GetMapping
-    public ResponseEntity<ApplicationResponse> getOne(@RequestParam("guid") String guid) {
+    @GetMapping("/{guid}")
+    public ResponseEntity<ApplicationResponse> getOne(@PathVariable String guid) {
         return ResponseEntity.status(OK).body(applicationService.getOne(guid));
     }
 

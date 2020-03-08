@@ -38,7 +38,7 @@ public class FileExtractedListener {
         InputStream inputStream = Files.newInputStream(manifestFilePath);
         ManifestDefinition manifestDefinition = yaml.load(inputStream);
         validateManifestDefinition(manifestDefinition);
-        applicationEventPublisher.publishEvent(new YamlParsingCompleted(manifestDefinition, extractedFilePath));
+        applicationEventPublisher.publishEvent(new YamlParsingCompleted(manifestDefinition, extractedFilePath, fileExtracted.getGuid()));
     }
 
     private Path findManifestFile(Path extractedFilePath) throws IOException {

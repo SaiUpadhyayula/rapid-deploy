@@ -23,4 +23,5 @@ public class Application {
     private DeploymentHistory deploymentHistory;
     private BuildLogs buildLogs;
     private BuildState buildState;
+    private String containerId;
 }
