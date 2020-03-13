@@ -10,6 +10,7 @@ import static org.springframework.util.StringUtils.cleanPath;
 public class FileNameUtils {
 
     public static final String UPLOAD_DIR = "user-files";
+    public static final String GIT_UPLOAD_DIR = "git-user-files";
     public static final String UNZIPPED_DIR = "unzipped-files";
     public static final String MANIFEST_FILE = "manifest.yml";
     public static final String POM_XML = "pom.xml";

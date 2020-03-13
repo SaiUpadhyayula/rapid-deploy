@@ -12,4 +12,6 @@ import javax.validation.constraints.NotBlank;
 public class GitRequestPayload {
     @NotBlank(message = "GIT URL cannot be empty or null")
     private String gitURL;
+    @NotBlank(message = "App GUID cannot be empty or null")
+    private String appGuid;
 }

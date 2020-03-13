@@ -5,6 +5,7 @@ target/
 !**/src/test/**
 user-files/**
 unzipped-files/**
+git-user-files/**
 
 ### STS ###
 .apt_generated
