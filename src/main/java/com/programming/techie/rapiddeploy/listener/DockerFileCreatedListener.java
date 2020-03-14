@@ -24,6 +24,7 @@ public class DockerFileCreatedListener {
     public void handle(DockerfileCreated dockerfileCreated) {
         String imageId = dockerContainerService.buildDockerImage(dockerfileCreated.getFile());
         String containerId = dockerContainerService.run(imageId, Collections.emptyList(), "test").getFirst();
+        log.info("{}", dockerContainerService.inspectContainer(containerId));
         String appGuid = dockerfileCreated.getAppGuid();
         Application application = applicationRepository.findByGuid(appGuid)
                 .orElseThrow(() -> new RapidDeployException("No Application found with GUID " + appGuid));

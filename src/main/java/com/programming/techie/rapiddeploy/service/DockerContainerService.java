@@ -3,9 +3,7 @@ package com.programming.techie.rapiddeploy.service;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.InspectContainerResponse;
-import com.github.dockerjava.api.model.Frame;
-import com.github.dockerjava.api.model.HostConfig;
-import com.github.dockerjava.api.model.Network;
+import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
 import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.github.dockerjava.core.command.PullImageResultCallback;
@@ -64,12 +62,20 @@ public class DockerContainerService {
                 .collect(toList());
         String containerName = RAPID_DEPLOY_SERVICE_PREFIX + name;
         DockerClient dockerClient = DockerClientManager.getClient();
+
+        ExposedPort http8080 = ExposedPort.tcp(8080);
+
+        Ports portBindings = new Ports();
+        portBindings.bind(http8080, Ports.Binding.bindPort(8081));
+
         CreateContainerResponse container = dockerClient.createContainerCmd(imageId)
                 .withEnv(envList)
                 .withName(RAPID_DEPLOY_SERVICE_PREFIX + name)
+                .withExposedPorts(http8080)
                 .withHostConfig(HostConfig.newHostConfig()
                         .withNetworkMode(NETWORK_NAME)
-                        .withAutoRemove(true))
+                        .withAutoRemove(true)
+                        .withPortBindings(portBindings))
                 .exec();
         dockerClient.startContainerCmd(container.getId()).exec();
         log.info("Container ID - {}", container.getId());
