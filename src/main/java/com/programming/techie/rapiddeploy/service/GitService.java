@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.nio.file.Paths;
 
-import static com.programming.techie.rapiddeploy.util.FileNameUtils.GIT_UPLOAD_DIR;
+import static com.programming.techie.rapiddeploy.util.RapidDeployConstants.GIT_UPLOAD_DIR;
 
 @Service
 @AllArgsConstructor

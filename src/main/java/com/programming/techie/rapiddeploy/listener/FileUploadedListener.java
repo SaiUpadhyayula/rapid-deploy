@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.file.Paths;
 
-import static com.programming.techie.rapiddeploy.util.FileNameUtils.UNZIPPED_DIR;
+import static com.programming.techie.rapiddeploy.util.RapidDeployConstants.UNZIPPED_DIR;
 
 @Service
 @AllArgsConstructor

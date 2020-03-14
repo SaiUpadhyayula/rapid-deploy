@@ -5,7 +5,7 @@ import com.programming.techie.rapiddeploy.events.YamlParsingCompleted;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.model.ManifestDefinition;
 import com.programming.techie.rapiddeploy.model.SupportedLanguage;
-import com.programming.techie.rapiddeploy.util.FileNameUtils;
+import com.programming.techie.rapiddeploy.util.RapidDeployConstants;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -44,7 +44,7 @@ public class FileExtractedListener {
     private Path findManifestFile(Path extractedFilePath) throws IOException {
         return find(extractedFilePath, 1,
                 ((path, basicFileAttributes) -> path.getFileName().toString()
-                        .equals(FileNameUtils.MANIFEST_FILE)))
+                        .equals(RapidDeployConstants.MANIFEST_FILE)))
                 .findAny().orElseThrow(() -> new RapidDeployException("Cannot find manifest.yml file inside the folder, Please Check"));
     }
 

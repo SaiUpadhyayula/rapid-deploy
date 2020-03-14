@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 import static com.google.common.collect.MoreCollectors.onlyElement;
-import static com.programming.techie.rapiddeploy.util.FileNameUtils.*;
+import static com.programming.techie.rapiddeploy.util.RapidDeployConstants.*;
 import static java.nio.file.Files.find;
 
 @Service

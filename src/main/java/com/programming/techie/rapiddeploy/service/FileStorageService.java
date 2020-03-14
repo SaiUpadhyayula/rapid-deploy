@@ -11,8 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.programming.techie.rapiddeploy.util.FileNameUtils.UPLOAD_DIR;
-import static com.programming.techie.rapiddeploy.util.FileNameUtils.extractFileName;
+import static com.programming.techie.rapiddeploy.util.RapidDeployConstants.UPLOAD_DIR;
+import static com.programming.techie.rapiddeploy.util.RapidDeployConstants.extractFileName;
 import static java.nio.file.Files.copy;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 

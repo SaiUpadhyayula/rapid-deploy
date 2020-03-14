@@ -7,7 +7,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.springframework.util.StringUtils.cleanPath;
 
 @UtilityClass
-public class FileNameUtils {
+public class RapidDeployConstants {
 
     public static final String UPLOAD_DIR = "user-files";
     public static final String GIT_UPLOAD_DIR = "git-user-files";
@@ -18,6 +18,9 @@ public class FileNameUtils {
     public static final String MAVEN_FOLDER = ".mvn";
     public static final String MAVENW_WINDOWS = "mvnw.cmd";
     public static final String MAVENW_LINUX = "mvnw";
+
+    public static final String NETWORK_NAME = "rapid-deploy-network";
+    public static final String RAPID_DEPLOY_SERVICE_PREFIX = "rd-srv-";
 
     public static String extractFileName(MultipartFile file) {
         checkNotNull(file);

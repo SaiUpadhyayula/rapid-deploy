@@ -22,15 +22,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.programming.techie.rapiddeploy.util.RapidDeployConstants.NETWORK_NAME;
+import static com.programming.techie.rapiddeploy.util.RapidDeployConstants.RAPID_DEPLOY_SERVICE_PREFIX;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
 public class DockerContainerService {
-
-    private static final String NETWORK_NAME = "rapid-deploy-network";
-    public static final String RAPID_DEPLOY_SERVICE_PREFIX = "rd-srv-";
 
     @PostConstruct
     public void createNetwork() {
