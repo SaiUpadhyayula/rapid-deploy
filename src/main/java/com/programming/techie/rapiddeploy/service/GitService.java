@@ -30,8 +30,6 @@ public class GitService {
                     .setURI(gitRequestPayload.getGitURL())
                     .setDirectory(file)
                     .call();
-
-            log.info("");
         } catch (Exception e) {
             log.error("Exception occurred when Cloning the repository", e);
             throw new RapidDeployException("Exception occurred when Cloning the repository", e);

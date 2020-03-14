@@ -9,10 +9,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Document(value = "Service")
-public class Service {
+@Document(value = "ServiceTemplate")
+public class ServiceTemplate {
     @Id
     private String id;
+    private String guid;
     private String name;
     private String description;
+    private Integer portNumber;
+    private String imageName;
+    private String tagName;
 }

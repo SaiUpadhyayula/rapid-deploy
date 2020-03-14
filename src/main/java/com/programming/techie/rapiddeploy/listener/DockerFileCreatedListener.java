@@ -37,7 +37,6 @@ public class DockerFileCreatedListener {
         CreateContainerResponse container = dockerClient.createContainerCmd(imageId).exec();
         dockerClient.startContainerCmd(container.getId()).exec();
         log.info("Container ID - " + container.getId());
-
         String appGuid = dockerfileCreated.getAppGuid();
         Application application = applicationRepository.findByGuid(appGuid)
                 .orElseThrow(() -> new RapidDeployException("No Application found with GUID " + appGuid));

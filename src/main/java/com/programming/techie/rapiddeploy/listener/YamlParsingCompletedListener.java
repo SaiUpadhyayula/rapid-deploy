@@ -5,7 +5,7 @@ import com.programming.techie.rapiddeploy.events.YamlParsingCompleted;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.model.SupportedLanguage;
 import com.programming.techie.rapiddeploy.service.DockerfileFactory;
-import com.programming.techie.rapiddeploy.service.impl.*;
+import com.programming.techie.rapiddeploy.service.impl.dockerfile.*;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +51,7 @@ public class YamlParsingCompletedListener {
 
         SupportedLanguage supportedLanguage = SupportedLanguage.lookup(yamlParsingCompleted.getManifestDefinition().getLanguage());
         DockerfileFactory dockerfileFactory = dockerfileFactoryMap.get(supportedLanguage);
-        String dockerFileContent = dockerfileFactory.createDockerFileContent(extractedFilePath, baseImage);
+        String dockerFileContent = dockerfileFactory.createDockerFileContent(extractedFilePath, baseImage, yamlParsingCompleted.getManifestDefinition());
         File dockerFile = createDockerFile(extractedFilePath, dockerFileContent);
 
         applicationEventPublisher.publishEvent(new DockerfileCreated(dockerFile, yamlParsingCompleted.getAppGuid()));

@@ -1,7 +1,6 @@
 package com.programming.techie.rapiddeploy.service;
 
 import com.programming.techie.rapiddeploy.exceptions.FileStorageException;
-import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,6 @@ import java.nio.file.Paths;
 import static com.programming.techie.rapiddeploy.util.FileNameUtils.UPLOAD_DIR;
 import static com.programming.techie.rapiddeploy.util.FileNameUtils.extractFileName;
 import static java.nio.file.Files.copy;
-import static java.nio.file.Files.find;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 @Service

@@ -49,4 +49,8 @@ public class ApplicationService {
     public void delete(String guid) {
         applicationRepository.deleteByGuid(guid);
     }
+
+    public void update(ApplicationPayload applicationPayload) {
+
+    }
 }

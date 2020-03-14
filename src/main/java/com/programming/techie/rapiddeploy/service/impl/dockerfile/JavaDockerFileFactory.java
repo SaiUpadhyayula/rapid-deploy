@@ -1,8 +1,9 @@
-package com.programming.techie.rapiddeploy.service.impl;
+package com.programming.techie.rapiddeploy.service.impl.dockerfile;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
+import com.programming.techie.rapiddeploy.model.ManifestDefinition;
 import com.programming.techie.rapiddeploy.service.DockerfileFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ public class JavaDockerFileFactory implements DockerfileFactory {
             .build();
 
     @Override
-    public String createDockerFileContent(Path extractedFilePath, String baseImage) {
+    public String createDockerFileContent(Path extractedFilePath, String baseImage, ManifestDefinition manifestDefinition) {
         String rootFile = rootFileList.stream()
                 .filter(file -> findRootFile(extractedFilePath, file))
                 .collect(onlyElement());
@@ -48,8 +49,10 @@ public class JavaDockerFileFactory implements DockerfileFactory {
                         "COPY . /app" + System.lineSeparator() +
                         "ENV PORT %s" + System.lineSeparator() +
                         "EXPOSE %s" + System.lineSeparator() +
+                        "RUN %s" + System.lineSeparator() +
                         "CMD %s";
-        return String.format(dockerFile, baseImage, 8080, 8080, buildCommand);
+        return String.format(dockerFile, baseImage, 8080, 8080, buildCommand, manifestDefinition.getRun());
+
     }
 
     @SneakyThrows

@@ -25,6 +25,12 @@ public class ApplicationRestController {
                 .body(applicationService.create(applicationPayload));
     }
 
+    @PutMapping
+    public ResponseEntity<ApplicationResponse> update(@Valid @RequestBody ApplicationPayload applicationPayload) {
+        applicationService.update(applicationPayload);
+        return null;
+    }
+
     @GetMapping
     public ResponseEntity<List<ApplicationResponse>> getAll() {
         return ResponseEntity.status(OK).body(applicationService.getAll());
