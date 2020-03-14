@@ -18,6 +18,6 @@ public class ManagedService extends IdEntity {
     private String guid;
     private ServiceTemplate serviceTemplate;
     private List<EnvironmentVariables> environmentVariables;
-    private BuildLogs buildLogs;
+    private String logs;
     private String containerId;
 }
