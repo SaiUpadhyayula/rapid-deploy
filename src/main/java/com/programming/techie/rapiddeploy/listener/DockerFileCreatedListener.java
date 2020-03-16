@@ -29,6 +29,7 @@ public class DockerFileCreatedListener {
         Application application = applicationRepository.findByGuid(appGuid)
                 .orElseThrow(() -> new RapidDeployException("No Application found with GUID " + appGuid));
         application.setContainerId(containerId);
+        application.setImageId(imageId);
         applicationRepository.save(application);
     }
 }

@@ -46,4 +46,15 @@ public class ApplicationRestController {
         applicationService.delete(guid);
         return ResponseEntity.status(NOT_FOUND).build();
     }
+
+    @GetMapping("/{guid}/start")
+    public ResponseEntity<String> startApplication(@PathVariable String guid) {
+        return ResponseEntity.status(OK).body(applicationService.startApplicationContainer(guid));
+    }
+
+    @GetMapping("/{guid}/stop")
+    public ResponseEntity<String> stopApplication(@PathVariable String guid) {
+        applicationService.stopApplicationContainer(guid);
+        return ResponseEntity.status(OK).body("Application Stopped");
+    }
 }

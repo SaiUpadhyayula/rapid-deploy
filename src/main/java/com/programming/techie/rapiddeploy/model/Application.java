@@ -26,5 +26,6 @@ public class Application {
     private BuildLogs buildLogs;
     private BuildState buildState;
     private String containerId;
+    private String imageId;
     private List<EnvironmentVariables> environmentVariables;
 }
