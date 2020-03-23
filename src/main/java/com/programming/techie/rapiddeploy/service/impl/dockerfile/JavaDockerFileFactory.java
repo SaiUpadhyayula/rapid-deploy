@@ -1,7 +1,6 @@
 package com.programming.techie.rapiddeploy.service.impl.dockerfile;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.model.ManifestDefinition;
 import com.programming.techie.rapiddeploy.service.DockerfileFactory;
@@ -25,11 +24,7 @@ import static java.nio.file.Files.find;
 @Slf4j
 public class JavaDockerFileFactory implements DockerfileFactory {
 
-    private ImmutableList<String> rootFileList = ImmutableList.of(POM_XML, BUILD_GRADLE);
-    private ImmutableMap<String, String> buildCommandMap = ImmutableMap.<String, String>builder()
-            .put(POM_XML, "./mvnw -B clean install -DskipTests")
-            .put(BUILD_GRADLE, "./gradlew stage")
-            .build();
+    private final ImmutableList<String> rootFileList = ImmutableList.of(POM_XML, BUILD_GRADLE);
 
     @Override
     public String createDockerFileContent(Path extractedFilePath, String baseImage, ManifestDefinition manifestDefinition) {
@@ -41,7 +36,6 @@ public class JavaDockerFileFactory implements DockerfileFactory {
             copyMavenWrapper(extractedFilePath);
         }
 
-//        String buildCommand = buildCommandMap.get(rootFile);
         String dockerFile =
                 "FROM gliderlabs/herokuish:latest" + System.lineSeparator() +
                         "COPY . /app" + System.lineSeparator() +
@@ -49,7 +43,6 @@ public class JavaDockerFileFactory implements DockerfileFactory {
                         "EXPOSE %s" + System.lineSeparator() +
                         "CMD /build && /start web";
         return String.format(dockerFile, 8080, 8080, manifestDefinition.getRun());
-
     }
 
     @SneakyThrows

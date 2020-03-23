@@ -9,7 +9,7 @@ import com.github.dockerjava.core.command.LogContainerResultCallback;
 import com.github.dockerjava.core.command.PullImageResultCallback;
 import com.google.common.base.Preconditions;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
-import com.programming.techie.rapiddeploy.model.EnvironmentVariables;
+import com.programming.techie.rapiddeploy.model.DockerContainerPayload;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -55,22 +55,22 @@ public class DockerContainerService {
         return imageId;
     }
 
-    public Pair<String, String> run(String imageId, List<EnvironmentVariables> environmentVariables, String name) {
-        List<String> envList = environmentVariables
+    public Pair<String, String> run(DockerContainerPayload dockerContainerPayload) {
+        List<String> envList = dockerContainerPayload.getEnvironmentVariables()
                 .stream()
                 .map(env -> env.getKey() + "=" + env.getValue())
                 .collect(toList());
-        String containerName = RAPID_DEPLOY_SERVICE_PREFIX + name;
+        String containerName = RAPID_DEPLOY_SERVICE_PREFIX + dockerContainerPayload.getName();
         DockerClient dockerClient = DockerClientManager.getClient();
 
-        ExposedPort http8080 = ExposedPort.tcp(8080);
+        ExposedPort http8080 = ExposedPort.tcp(dockerContainerPayload.getPort());
 
         Ports portBindings = new Ports();
-        portBindings.bind(http8080, Ports.Binding.bindPort(8084));
+        portBindings.bind(http8080, Ports.Binding.bindPort(dockerContainerPayload.getExposedPort()));
 
-        CreateContainerResponse container = dockerClient.createContainerCmd(imageId)
+        CreateContainerResponse container = dockerClient.createContainerCmd(dockerContainerPayload.getImageId())
                 .withEnv(envList)
-                .withName(RAPID_DEPLOY_SERVICE_PREFIX + name)
+                .withName(RAPID_DEPLOY_SERVICE_PREFIX + dockerContainerPayload.getName())
                 .withExposedPorts(http8080)
                 .withHostConfig(HostConfig.newHostConfig()
                         .withNetworkMode(NETWORK_NAME)

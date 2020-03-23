@@ -3,6 +3,7 @@ package com.programming.techie.rapiddeploy.service;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.mapper.ApplicationMapper;
 import com.programming.techie.rapiddeploy.model.Application;
+import com.programming.techie.rapiddeploy.model.DockerContainerPayload;
 import com.programming.techie.rapiddeploy.model.EnvironmentVariables;
 import com.programming.techie.rapiddeploy.payload.ApplicationPayload;
 import com.programming.techie.rapiddeploy.payload.ApplicationResponse;
@@ -68,7 +69,13 @@ public class ApplicationService {
         String imageId = application.getImageId();
         List<EnvironmentVariables> environmentVariables = application.getEnvironmentVariables();
         String name = application.getName();
-        Pair<String, String> container = dockerContainerService.run(imageId, environmentVariables, name);
+        Pair<String, String> container = dockerContainerService.run(DockerContainerPayload.builder()
+                .imageId(imageId)
+                .environmentVariables(environmentVariables)
+                .name("srv-" + name)
+                .port(8080)
+                .exposedPort(8080)
+                .build());
         return container.getFirst();
     }
 

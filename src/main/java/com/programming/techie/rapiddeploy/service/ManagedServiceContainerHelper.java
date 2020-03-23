@@ -1,5 +1,6 @@
 package com.programming.techie.rapiddeploy.service;
 
+import com.programming.techie.rapiddeploy.model.DockerContainerPayload;
 import com.programming.techie.rapiddeploy.model.ManagedService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.util.Pair;
@@ -18,7 +19,13 @@ public class ManagedServiceContainerHelper {
 
     Pair<String, String> startManagedServiceContainer(ManagedService managedService) {
         String imageId = dockerContainerService.getImageId(managedService.getServiceTemplate().getImageName());
-        return dockerContainerService.run(imageId, managedService.getEnvironmentVariables(), managedService.getName());
+        return dockerContainerService.run(DockerContainerPayload.builder()
+                .imageId(imageId)
+                .environmentVariables(managedService.getEnvironmentVariables())
+                .name("srv-" + managedService.getName())
+                .port(managedService.getServiceTemplate().getPortNumber())
+                .exposedPort(managedService.getServiceTemplate().getPortNumber())
+                .build());
     }
 
     void stopManagedServiceContainer(ManagedService managedService) {
