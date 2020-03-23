@@ -66,7 +66,7 @@ public class DockerContainerService {
         ExposedPort http8080 = ExposedPort.tcp(8080);
 
         Ports portBindings = new Ports();
-        portBindings.bind(http8080, Ports.Binding.bindPort(8082));
+        portBindings.bind(http8080, Ports.Binding.bindPort(8084));
 
         CreateContainerResponse container = dockerClient.createContainerCmd(imageId)
                 .withEnv(envList)

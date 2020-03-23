@@ -41,17 +41,14 @@ public class JavaDockerFileFactory implements DockerfileFactory {
             copyMavenWrapper(extractedFilePath);
         }
 
-        String buildCommand = buildCommandMap.get(rootFile);
+//        String buildCommand = buildCommandMap.get(rootFile);
         String dockerFile =
-                "FROM %s" + System.lineSeparator() +
-                        "RUN mkdir /app" + System.lineSeparator() +
-                        "WORKDIR /app" + System.lineSeparator() +
+                "FROM gliderlabs/herokuish:latest" + System.lineSeparator() +
                         "COPY . /app" + System.lineSeparator() +
                         "ENV PORT %s" + System.lineSeparator() +
                         "EXPOSE %s" + System.lineSeparator() +
-                        "RUN %s" + System.lineSeparator() +
-                        "CMD %s";
-        return String.format(dockerFile, baseImage, 8080, 8080, buildCommand, manifestDefinition.getRun());
+                        "CMD /build && /start web";
+        return String.format(dockerFile, 8080, 8080, manifestDefinition.getRun());
 
     }
 
