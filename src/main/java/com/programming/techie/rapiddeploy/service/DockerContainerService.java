@@ -79,6 +79,7 @@ public class DockerContainerService {
                 .exec();
         dockerClient.startContainerCmd(container.getId()).exec();
         log.info("Container ID - {}", container.getId());
+        log.info("Running container exposed at - {}", portBindings);
         return Pair.of(container.getId(), containerName);
     }
 

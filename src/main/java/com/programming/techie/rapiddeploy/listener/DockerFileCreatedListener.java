@@ -30,9 +30,9 @@ public class DockerFileCreatedListener {
         String containerId = dockerContainerService.run(DockerContainerPayload.builder()
                 .imageId(imageId)
                 .environmentVariables(Collections.emptyList())
-                .name("srv " + application.getName())
+                .name(application.getName())
                 .port(8080)
-                .exposedPort(8080)
+                .exposedPort(8081)
                 .build()).getFirst();
         log.info("{}", dockerContainerService.inspectContainer(containerId));
         application.setContainerId(containerId);
