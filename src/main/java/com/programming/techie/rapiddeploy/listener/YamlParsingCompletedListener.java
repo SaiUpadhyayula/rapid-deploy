@@ -3,6 +3,7 @@ package com.programming.techie.rapiddeploy.listener;
 import com.programming.techie.rapiddeploy.events.DockerfileCreated;
 import com.programming.techie.rapiddeploy.events.YamlParsingCompleted;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
+import com.programming.techie.rapiddeploy.model.ManifestDefinition;
 import com.programming.techie.rapiddeploy.model.SupportedLanguage;
 import com.programming.techie.rapiddeploy.service.DockerfileFactory;
 import com.programming.techie.rapiddeploy.service.impl.dockerfile.*;
@@ -46,39 +47,29 @@ public class YamlParsingCompletedListener {
 
     @EventListener
     public void handle(YamlParsingCompleted yamlParsingCompleted) {
-        String baseImage = determineBaseImage(yamlParsingCompleted);
         Path extractedFilePath = yamlParsingCompleted.getExtractedFilePath();
 
         SupportedLanguage supportedLanguage = SupportedLanguage.lookup(yamlParsingCompleted.getManifestDefinition().getLanguage());
         DockerfileFactory dockerfileFactory = dockerfileFactoryMap.get(supportedLanguage);
-        String dockerFileContent = dockerfileFactory.createDockerFileContent(extractedFilePath, baseImage, yamlParsingCompleted.getManifestDefinition());
+        String dockerFileContent = dockerfileFactory.createDockerFileContent(extractedFilePath, yamlParsingCompleted.getManifestDefinition());
         File dockerFile = createDockerFile(extractedFilePath, dockerFileContent);
-
+        createProcFile(extractedFilePath, yamlParsingCompleted.getManifestDefinition());
         applicationEventPublisher.publishEvent(new DockerfileCreated(dockerFile, yamlParsingCompleted.getAppGuid()));
+    }
+
+    @SneakyThrows
+    private File createProcFile(Path extractedFilePath, ManifestDefinition manifestDefinition) {
+        Path dockerFilePath = Paths.get(extractedFilePath.toAbsolutePath().toString() + File.separator + "Procfile").toAbsolutePath();
+        return Files.write(dockerFilePath, buildProcFileContent(manifestDefinition.getRun()).getBytes()).toFile();
+    }
+
+    private String buildProcFileContent(String content) {
+        return "web: " + content;
     }
 
     @SneakyThrows
     private File createDockerFile(Path extractedFilePath, String dockerFileContent) {
         Path dockerFilePath = Paths.get(extractedFilePath.toAbsolutePath().toString() + File.separator + "Dockerfile").toAbsolutePath();
         return Files.write(dockerFilePath, dockerFileContent.getBytes()).toFile();
-    }
-
-    private String determineBaseImage(YamlParsingCompleted yamlParsingCompleted) {
-        String language = yamlParsingCompleted.getManifestDefinition().getLanguage();
-        String version = yamlParsingCompleted.getManifestDefinition().getVersion();
-
-        try {
-            File file = ResourceUtils.getFile("classpath:runtimes.json");
-            JSONObject jsonObject = new JSONObject(new String(readAllBytes(file.toPath())));
-            JSONArray jsonArray = (JSONArray) jsonObject.get(language);
-            return jsonArray.toList()
-                    .stream()
-                    .map(object -> ((HashMap) object).get(version).toString())
-                    .findAny()
-                    .orElseThrow(() -> new RapidDeployException("Unsupported language/version - "
-                            + language + ", " + version + ". Please Check your manifest file"));
-        } catch (IOException e) {
-            throw new RapidDeployException("");
-        }
     }
 }

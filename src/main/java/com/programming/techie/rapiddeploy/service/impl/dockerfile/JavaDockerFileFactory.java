@@ -27,7 +27,7 @@ public class JavaDockerFileFactory implements DockerfileFactory {
     private final ImmutableList<String> rootFileList = ImmutableList.of(POM_XML, BUILD_GRADLE);
 
     @Override
-    public String createDockerFileContent(Path extractedFilePath, String baseImage, ManifestDefinition manifestDefinition) {
+    public String createDockerFileContent(Path extractedFilePath, ManifestDefinition manifestDefinition) {
         String rootFile = rootFileList.stream()
                 .filter(file -> findRootFile(extractedFilePath, file))
                 .collect(onlyElement());

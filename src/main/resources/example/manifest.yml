@@ -1,0 +1,5 @@
+name: test
+language: java
+version: 8
+build: mvn clean install
+run: java -jar target/spring-ng-blog-0.0.1-SNAPSHOT.jar
