@@ -2,7 +2,7 @@ package com.programming.techie.rapiddeploy.controller;
 
 import com.programming.techie.rapiddeploy.model.ManagedServicePayload;
 import com.programming.techie.rapiddeploy.payload.ServiceTemplateDto;
-import com.programming.techie.rapiddeploy.service.ManagedServiceFacade;
+import com.programming.techie.rapiddeploy.service.managedservice.ManagedServiceFacade;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

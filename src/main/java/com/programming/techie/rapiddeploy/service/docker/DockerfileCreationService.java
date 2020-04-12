@@ -1,40 +1,25 @@
-package com.programming.techie.rapiddeploy.listener;
+package com.programming.techie.rapiddeploy.service.docker;
 
-import com.programming.techie.rapiddeploy.events.DockerfileCreated;
-import com.programming.techie.rapiddeploy.events.YamlParsingCompleted;
-import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
+import com.programming.techie.rapiddeploy.dto.YamlParsingCompleted;
 import com.programming.techie.rapiddeploy.model.ManifestDefinition;
 import com.programming.techie.rapiddeploy.model.SupportedLanguage;
-import com.programming.techie.rapiddeploy.service.DockerfileFactory;
-import com.programming.techie.rapiddeploy.service.impl.dockerfile.*;
-import lombok.AllArgsConstructor;
+import com.programming.techie.rapiddeploy.service.docker.impl.*;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
 
-import static java.nio.file.Files.readAllBytes;
-
 @Service
-@AllArgsConstructor
-@Slf4j
-public class YamlParsingCompletedListener {
-
+@RequiredArgsConstructor
+public class DockerfileCreationService {
     private final Map<SupportedLanguage, DockerfileFactory> dockerfileFactoryMap;
-    private final ApplicationEventPublisher applicationEventPublisher;
+    private final DockerContainerOrchestrator dockerContainerOrchestrator;
 
     @PostConstruct
     public void initializeDockerfileFactoryMap() {
@@ -45,8 +30,7 @@ public class YamlParsingCompletedListener {
         dockerfileFactoryMap.put(SupportedLanguage.RUBY, new RubyDockerfileFactory());
     }
 
-    @EventListener
-    public void handle(YamlParsingCompleted yamlParsingCompleted) {
+    public void create(YamlParsingCompleted yamlParsingCompleted) {
         Path extractedFilePath = yamlParsingCompleted.getExtractedFilePath();
 
         SupportedLanguage supportedLanguage = SupportedLanguage.lookup(yamlParsingCompleted.getManifestDefinition().getLanguage());
@@ -54,7 +38,7 @@ public class YamlParsingCompletedListener {
         String dockerFileContent = dockerfileFactory.createDockerFileContent(extractedFilePath, yamlParsingCompleted.getManifestDefinition());
         File dockerFile = createDockerFile(extractedFilePath, dockerFileContent);
         createProcFile(extractedFilePath, yamlParsingCompleted.getManifestDefinition());
-        applicationEventPublisher.publishEvent(new DockerfileCreated(dockerFile, yamlParsingCompleted.getAppGuid()));
+        dockerContainerOrchestrator.handle(dockerFile, yamlParsingCompleted.getAppGuid());
     }
 
     @SneakyThrows

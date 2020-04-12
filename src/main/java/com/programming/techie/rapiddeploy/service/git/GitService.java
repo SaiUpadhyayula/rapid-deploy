@@ -1,4 +1,4 @@
-package com.programming.techie.rapiddeploy.service;
+package com.programming.techie.rapiddeploy.service.git;
 
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.model.Application;

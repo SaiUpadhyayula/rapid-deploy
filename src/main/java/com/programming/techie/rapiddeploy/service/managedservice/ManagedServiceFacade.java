@@ -1,4 +1,4 @@
-package com.programming.techie.rapiddeploy.service;
+package com.programming.techie.rapiddeploy.service.managedservice;
 
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.mapper.ManagedServiceMapper;
@@ -7,6 +7,7 @@ import com.programming.techie.rapiddeploy.model.ManagedServicePayload;
 import com.programming.techie.rapiddeploy.model.ServiceTemplate;
 import com.programming.techie.rapiddeploy.payload.ServiceTemplateDto;
 import com.programming.techie.rapiddeploy.repository.ManagedServiceRepository;
+import com.programming.techie.rapiddeploy.service.servicetemplate.ServiceTemplateFacade;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;

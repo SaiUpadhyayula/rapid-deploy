@@ -1,4 +1,4 @@
-package com.programming.techie.rapiddeploy.service;
+package com.programming.techie.rapiddeploy.service.docker;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DockerClientBuilder;

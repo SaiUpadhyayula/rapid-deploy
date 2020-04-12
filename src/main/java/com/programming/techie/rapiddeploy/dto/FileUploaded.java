@@ -1,4 +1,4 @@
-package com.programming.techie.rapiddeploy.events;
+package com.programming.techie.rapiddeploy.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

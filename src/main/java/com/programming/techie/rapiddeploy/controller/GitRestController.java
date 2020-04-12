@@ -1,7 +1,7 @@
 package com.programming.techie.rapiddeploy.controller;
 
 import com.programming.techie.rapiddeploy.payload.GitRequestPayload;
-import com.programming.techie.rapiddeploy.service.GitService;
+import com.programming.techie.rapiddeploy.service.git.GitService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;

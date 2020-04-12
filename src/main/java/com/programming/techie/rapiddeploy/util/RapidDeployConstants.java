@@ -9,6 +9,10 @@ import static org.springframework.util.StringUtils.cleanPath;
 @UtilityClass
 public class RapidDeployConstants {
 
+    //URLS
+    public static final String CONTAINER_STATUS_BASE_URL = "/api/container/status";
+
+
     public static final String UPLOAD_DIR = "user-files";
     public static final String GIT_UPLOAD_DIR = "git-user-files";
     public static final String UNZIPPED_DIR = "unzipped-files";

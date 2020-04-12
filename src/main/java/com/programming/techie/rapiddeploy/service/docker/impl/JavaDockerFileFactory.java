@@ -1,9 +1,9 @@
-package com.programming.techie.rapiddeploy.service.impl.dockerfile;
+package com.programming.techie.rapiddeploy.service.docker.impl;
 
 import com.google.common.collect.ImmutableList;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.model.ManifestDefinition;
-import com.programming.techie.rapiddeploy.service.DockerfileFactory;
+import com.programming.techie.rapiddeploy.service.docker.DockerfileFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;

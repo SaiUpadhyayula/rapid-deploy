@@ -1,32 +1,37 @@
-package com.programming.techie.rapiddeploy.listener;
+package com.programming.techie.rapiddeploy.service.docker;
 
-import com.programming.techie.rapiddeploy.events.DockerfileCreated;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.model.Application;
 import com.programming.techie.rapiddeploy.model.DockerContainerPayload;
 import com.programming.techie.rapiddeploy.repository.ApplicationRepository;
-import com.programming.techie.rapiddeploy.service.DockerContainerService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.Collections;
 
+import static com.programming.techie.rapiddeploy.model.ApplicationState.STARTED;
+import static com.programming.techie.rapiddeploy.model.BuildState.IN_PROGRESS;
+import static com.programming.techie.rapiddeploy.model.BuildState.SUCCESS;
+import static org.springframework.data.util.Pair.of;
+
 @Service
+@RequiredArgsConstructor
 @Slf4j
-@AllArgsConstructor
-public class DockerFileCreatedListener {
+public class DockerContainerOrchestrator {
 
     private final ApplicationRepository applicationRepository;
     private final DockerContainerService dockerContainerService;
 
-    @EventListener
-    public void handle(DockerfileCreated dockerfileCreated) {
-        String imageId = dockerContainerService.buildDockerImage(dockerfileCreated.getFile());
-        String appGuid = dockerfileCreated.getAppGuid();
+    public void handle(File file, String appGuid) {
         Application application = applicationRepository.findByGuid(appGuid)
                 .orElseThrow(() -> new RapidDeployException("No Application found with GUID " + appGuid));
+        Pair<String, Application> pair = buildImage(file, application);
+        String imageId = pair.getFirst();
+        application = pair.getSecond();
+
         String containerId = dockerContainerService.run(DockerContainerPayload.builder()
                 .imageId(imageId)
                 .environmentVariables(Collections.emptyList())
@@ -34,9 +39,19 @@ public class DockerFileCreatedListener {
                 .port(8080)
                 .exposedPort(8081)
                 .build()).getFirst();
-        log.info("{}", dockerContainerService.inspectContainer(containerId));
+
         application.setContainerId(containerId);
         application.setImageId(imageId);
+        application.setApplicationState(STARTED);
         applicationRepository.save(application);
+    }
+
+    private Pair<String, Application> buildImage(File file, Application application) {
+        application.setBuildState(IN_PROGRESS);
+        applicationRepository.save(application);
+        String imageId = dockerContainerService.buildDockerImage(file);
+        application.setBuildState(SUCCESS);
+        applicationRepository.save(application);
+        return of(imageId, application);
     }
 }

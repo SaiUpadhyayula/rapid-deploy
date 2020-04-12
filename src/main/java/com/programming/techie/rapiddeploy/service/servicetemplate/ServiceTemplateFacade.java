@@ -1,4 +1,4 @@
-package com.programming.techie.rapiddeploy.service;
+package com.programming.techie.rapiddeploy.service.servicetemplate;
 
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.mapper.ServiceTemplateMapper;
@@ -49,7 +49,7 @@ public class ServiceTemplateFacade {
         log.info("Deleted Service with GUID - " + guid);
     }
 
-    ServiceTemplate findServiceTemplate(String guid) {
+    public ServiceTemplate findServiceTemplate(String guid) {
         return serviceTemplateRepository.findByGuid(guid)
                 .orElseThrow(() -> new RapidDeployException("Cannot find service template with GUID - " + guid));
     }

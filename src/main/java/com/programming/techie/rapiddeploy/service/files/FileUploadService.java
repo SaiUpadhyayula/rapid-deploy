@@ -1,4 +1,4 @@
-package com.programming.techie.rapiddeploy.service;
+package com.programming.techie.rapiddeploy.service.files;
 
 import com.programming.techie.rapiddeploy.exceptions.FileStorageException;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class FileStorageService {
+public class FileUploadService {
 
     public String upload(MultipartFile file) {
         String fileName = extractFileName(file);

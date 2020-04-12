@@ -2,7 +2,7 @@ package com.programming.techie.rapiddeploy.service;
 
 import org.junit.jupiter.api.Test;
 
-class FileStorageServiceTest {
+class FileUploadServiceTest {
 
     @Test
     public void testUploadFile() {

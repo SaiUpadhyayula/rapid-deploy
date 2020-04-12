@@ -1,4 +1,4 @@
-package com.programming.techie.rapiddeploy.events;
+package com.programming.techie.rapiddeploy.dto;
 
 import com.programming.techie.rapiddeploy.model.ManifestDefinition;
 import lombok.AllArgsConstructor;

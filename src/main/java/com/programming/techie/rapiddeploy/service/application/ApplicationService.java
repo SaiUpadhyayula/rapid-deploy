@@ -1,4 +1,4 @@
-package com.programming.techie.rapiddeploy.service;
+package com.programming.techie.rapiddeploy.service.application;
 
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.mapper.ApplicationMapper;
@@ -8,6 +8,7 @@ import com.programming.techie.rapiddeploy.model.EnvironmentVariables;
 import com.programming.techie.rapiddeploy.payload.ApplicationPayload;
 import com.programming.techie.rapiddeploy.payload.ApplicationResponse;
 import com.programming.techie.rapiddeploy.repository.ApplicationRepository;
+import com.programming.techie.rapiddeploy.service.docker.DockerContainerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
@@ -86,5 +87,9 @@ public class ApplicationService {
         dockerContainerService.stop(application.getContainerId());
     }
 
-
+    public String getContainerId(String guid) {
+        Application application = applicationRepository.findByGuid(guid)
+                .orElseThrow(() -> new RapidDeployException("Cannot find app by guid - " + guid));
+        return application.getContainerId();
+    }
 }

@@ -1,7 +1,7 @@
 package com.programming.techie.rapiddeploy.controller;
 
 import com.programming.techie.rapiddeploy.payload.ServiceTemplateDto;
-import com.programming.techie.rapiddeploy.service.ServiceTemplateFacade;
+import com.programming.techie.rapiddeploy.service.servicetemplate.ServiceTemplateFacade;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

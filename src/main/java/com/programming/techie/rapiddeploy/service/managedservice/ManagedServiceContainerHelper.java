@@ -1,7 +1,8 @@
-package com.programming.techie.rapiddeploy.service;
+package com.programming.techie.rapiddeploy.service.managedservice;
 
 import com.programming.techie.rapiddeploy.model.DockerContainerPayload;
 import com.programming.techie.rapiddeploy.model.ManagedService;
+import com.programming.techie.rapiddeploy.service.docker.DockerContainerService;
 import lombok.AllArgsConstructor;
 import me.alexpanov.net.FreePortFinder;
 import org.springframework.data.util.Pair;

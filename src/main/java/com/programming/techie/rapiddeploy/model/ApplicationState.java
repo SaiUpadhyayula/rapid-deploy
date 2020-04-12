@@ -1,7 +1,7 @@
 package com.programming.techie.rapiddeploy.model;
 
 public enum ApplicationState {
-    RUNNING("Running"),
+    STARTED("Started"),
     STOPPED("Stopped"),
     FAILED("");
 
