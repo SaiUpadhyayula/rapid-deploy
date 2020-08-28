@@ -56,10 +56,6 @@ public class DockerContainerService {
     }
 
     public Pair<String, String> run(DockerContainerPayload dockerContainerPayload) {
-        List<String> envList = dockerContainerPayload.getEnvironmentVariables()
-                .stream()
-                .map(env -> env.getKey() + "=" + env.getValue())
-                .collect(toList());
         String containerName = RAPID_DEPLOY_SERVICE_PREFIX + dockerContainerPayload.getName();
         DockerClient dockerClient = DockerClientManager.getClient();
 
@@ -68,8 +64,11 @@ public class DockerContainerService {
         Ports portBindings = new Ports();
         portBindings.bind(http8080, Ports.Binding.bindPort(dockerContainerPayload.getExposedPort()));
 
+        String[] envVarArgs = dockerContainerPayload.getEnvironmentVariables()
+                .stream()
+                .map(env -> env.getKey() + "=" + env.getValue()).toArray(String[]::new);
         CreateContainerResponse container = dockerClient.createContainerCmd(dockerContainerPayload.getImageId())
-                .withEnv(envList)
+                .withEnv(envVarArgs)
                 .withName(RAPID_DEPLOY_SERVICE_PREFIX + dockerContainerPayload.getName())
                 .withExposedPorts(http8080)
                 .withHostConfig(HostConfig.newHostConfig()
