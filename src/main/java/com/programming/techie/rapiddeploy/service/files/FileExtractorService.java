@@ -8,6 +8,7 @@ import net.lingala.zip4j.exception.ZipException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.nio.file.Paths;
 
 import static com.programming.techie.rapiddeploy.util.RapidDeployConstants.UNZIPPED_DIR;
@@ -25,7 +26,7 @@ public class FileExtractorService {
             ZipFile zipFile = new ZipFile(fullFileName);
             String destination = Paths.get(UNZIPPED_DIR).toAbsolutePath().toString();
             zipFile.extractAll(destination);
-            String updatedFullFileName = String.format("%s\\%s", destination, fileUploaded.getFileName());
+            String updatedFullFileName = String.format("%s%s%s", destination, File.separator,fileUploaded.getFileName());
             manifestDefinitionFileParsingService.parse(fileUploaded.getGuid(), Paths.get(updatedFullFileName));
         } catch (ZipException e) {
             throw new RapidDeployException("Exception occurred while extracting zip file", e);
