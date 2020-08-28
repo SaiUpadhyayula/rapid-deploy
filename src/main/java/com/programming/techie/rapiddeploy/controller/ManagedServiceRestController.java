@@ -24,7 +24,7 @@ public class ManagedServiceRestController {
                 .body(managedServiceFacade.initManagedService(serviceTemplatePayload));
     }
 
-    @GetMapping("start/{managedServiceGuid")
+    @GetMapping("start/{managedServiceGuid}")
     public ResponseEntity<String> startContainer(@PathVariable String managedServiceGuid) {
         managedServiceFacade.startManagedService(managedServiceGuid);
         return ResponseEntity.status(OK).body("Managed Service Started Successfully");
