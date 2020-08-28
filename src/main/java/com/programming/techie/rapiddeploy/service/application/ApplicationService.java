@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -33,6 +34,7 @@ public class ApplicationService {
         Application application = Application.builder()
                 .name(applicationName)
                 .guid(UUID.randomUUID().toString())
+                .environmentVariables(Collections.emptyList())
                 .build();
         applicationRepository.save(application);
         return applicationMapper.map(application);
@@ -76,6 +78,7 @@ public class ApplicationService {
                 .name("srv-" + name)
                 .port(8080)
                 .exposedPort(8080)
+                .environmentVariables(application.getEnvironmentVariables())
                 .build());
         return container.getFirst();
     }
