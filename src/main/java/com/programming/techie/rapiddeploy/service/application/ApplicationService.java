@@ -80,7 +80,7 @@ public class ApplicationService {
                 .environmentVariables(environmentVariables)
                 .name(name)
                 .port(8080)
-                .exposedPort(8080)
+                .exposedPort(8081)
                 .environmentVariables(application.getEnvironmentVariables())
                 .build());
         nginxService.start(false);

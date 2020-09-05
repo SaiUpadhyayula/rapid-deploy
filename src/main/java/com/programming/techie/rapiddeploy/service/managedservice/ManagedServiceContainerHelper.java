@@ -6,7 +6,6 @@ import com.programming.techie.rapiddeploy.service.docker.DockerContainerService;
 import com.programming.techie.rapiddeploy.service.docker.DockerImageService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.alexpanov.net.FreePortFinder;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +29,7 @@ public class ManagedServiceContainerHelper {
                 .environmentVariables(managedService.getEnvironmentVariables())
                 .name(managedService.getName())
                 .port(managedService.getServiceTemplate().getPortNumber())
-                .exposedPort(FreePortFinder.findFreeLocalPort())
+                .exposedPort(managedService.getServiceTemplate().getPortNumber())
                 .build());
     }
 
