@@ -12,5 +12,7 @@ public class DockerContainerPayload {
     private List<EnvironmentVariables> environmentVariables;
     private String name;
     private Integer port;
+    private String mountSource;
+    private String mountTarget;
     private Integer exposedPort;
 }

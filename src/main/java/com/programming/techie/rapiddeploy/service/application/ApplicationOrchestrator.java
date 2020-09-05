@@ -1,9 +1,12 @@
-package com.programming.techie.rapiddeploy.service.docker;
+package com.programming.techie.rapiddeploy.service.application;
 
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.model.Application;
 import com.programming.techie.rapiddeploy.model.DockerContainerPayload;
 import com.programming.techie.rapiddeploy.repository.ApplicationRepository;
+import com.programming.techie.rapiddeploy.service.docker.DockerContainerService;
+import com.programming.techie.rapiddeploy.service.docker.DockerImageService;
+import com.programming.techie.rapiddeploy.service.nginx.NginxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
@@ -20,10 +23,12 @@ import static org.springframework.data.util.Pair.of;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class DockerContainerOrchestrator {
+public class ApplicationOrchestrator {
 
     private final ApplicationRepository applicationRepository;
+    private final DockerImageService dockerImageService;
     private final DockerContainerService dockerContainerService;
+    private final NginxService nginxService;
 
     public void handle(File file, String appGuid) {
         Application application = applicationRepository.findByGuid(appGuid)
@@ -39,7 +44,7 @@ public class DockerContainerOrchestrator {
                 .port(8080)
                 .exposedPort(8081)
                 .build()).getFirst();
-
+        nginxService.start(false);
         application.setContainerId(containerId);
         application.setImageId(imageId);
         application.setApplicationState(STARTED);
@@ -49,7 +54,7 @@ public class DockerContainerOrchestrator {
     private Pair<String, Application> buildImage(File file, Application application) {
         application.setBuildState(IN_PROGRESS);
         applicationRepository.save(application);
-        String imageId = dockerContainerService.buildDockerImage(file);
+        String imageId = dockerImageService.buildDockerImage(file);
         application.setBuildState(SUCCESS);
         applicationRepository.save(application);
         return of(imageId, application);

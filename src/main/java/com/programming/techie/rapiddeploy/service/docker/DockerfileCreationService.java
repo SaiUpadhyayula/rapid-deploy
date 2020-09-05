@@ -3,6 +3,7 @@ package com.programming.techie.rapiddeploy.service.docker;
 import com.programming.techie.rapiddeploy.dto.YamlParsingCompleted;
 import com.programming.techie.rapiddeploy.model.ManifestDefinition;
 import com.programming.techie.rapiddeploy.model.SupportedLanguage;
+import com.programming.techie.rapiddeploy.service.application.ApplicationOrchestrator;
 import com.programming.techie.rapiddeploy.service.docker.impl.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -19,7 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DockerfileCreationService {
     private final Map<SupportedLanguage, DockerfileFactory> dockerfileFactoryMap;
-    private final DockerContainerOrchestrator dockerContainerOrchestrator;
+    private final ApplicationOrchestrator applicationOrchestrator;
 
     @PostConstruct
     public void initializeDockerfileFactoryMap() {
@@ -38,13 +39,13 @@ public class DockerfileCreationService {
         String dockerFileContent = dockerfileFactory.createDockerFileContent(extractedFilePath, yamlParsingCompleted.getManifestDefinition());
         File dockerFile = createDockerFile(extractedFilePath, dockerFileContent);
         createProcFile(extractedFilePath, yamlParsingCompleted.getManifestDefinition());
-        dockerContainerOrchestrator.handle(dockerFile, yamlParsingCompleted.getAppGuid());
+        applicationOrchestrator.handle(dockerFile, yamlParsingCompleted.getAppGuid());
     }
 
     @SneakyThrows
-    private File createProcFile(Path extractedFilePath, ManifestDefinition manifestDefinition) {
+    private void createProcFile(Path extractedFilePath, ManifestDefinition manifestDefinition) {
         Path dockerFilePath = Paths.get(extractedFilePath.toAbsolutePath().toString() + File.separator + "Procfile").toAbsolutePath();
-        return Files.write(dockerFilePath, buildProcFileContent(manifestDefinition.getRun()).getBytes()).toFile();
+        Files.write(dockerFilePath, buildProcFileContent(manifestDefinition.getRun()).getBytes()).toFile();
     }
 
     private String buildProcFileContent(String content) {

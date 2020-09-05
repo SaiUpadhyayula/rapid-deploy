@@ -48,20 +48,21 @@ public class JavaDockerFileFactory implements DockerfileFactory {
     @SneakyThrows
     private void copyMavenWrapper(Path extractedFilePath) {
         Path mvnFolderPath = Paths.get(MAVEN_FOLDER).toAbsolutePath().normalize();
-        Path mvnWindowsExecutablePath = Paths.get(MAVENW_WINDOWS).toAbsolutePath().normalize();
-        Path mvnLinuxExecutablePath = Paths.get(MAVENW_LINUX).toAbsolutePath().normalize();
+        Path mvnWindowsExecutablePath = Paths.get(MAVEN_WRAPPER_WINDOWS).toAbsolutePath().normalize();
+        Path mvnLinuxExecutablePath = Paths.get(MAVEN_WRAPPER_LINUX).toAbsolutePath().normalize();
 
         // Copy .mvn folder to user project directory
-        Path normalize = Paths.get(extractedFilePath.toAbsolutePath().toString() + File.separator + MAVEN_FOLDER).toAbsolutePath().normalize();
+        Path normalize = Paths.get(extractedFilePath.toAbsolutePath().toString() + File.separator + MAVEN_FOLDER)
+                .toAbsolutePath().normalize();
         Path directory = Files.createDirectories(normalize);
         FileUtils.copyDirectory(mvnFolderPath.toFile(), directory.toFile());
 
         // Copy mvnw.cmd File to the User Project Directory
-        Path mvnWindowsPath = extractedFilePath.resolve(MAVENW_WINDOWS);
+        Path mvnWindowsPath = extractedFilePath.resolve(MAVEN_WRAPPER_WINDOWS);
         Files.copy(mvnWindowsExecutablePath, mvnWindowsPath.toAbsolutePath(), StandardCopyOption.REPLACE_EXISTING);
 
         // Copy mvnw File to the User Project Directory
-        Path mvnLinuxPath = extractedFilePath.resolve(MAVENW_LINUX);
+        Path mvnLinuxPath = extractedFilePath.resolve(MAVEN_WRAPPER_LINUX);
         Files.copy(mvnLinuxExecutablePath, mvnLinuxPath.toAbsolutePath(), StandardCopyOption.REPLACE_EXISTING);
         log.info("");
     }

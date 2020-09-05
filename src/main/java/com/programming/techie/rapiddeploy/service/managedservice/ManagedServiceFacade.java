@@ -54,6 +54,7 @@ public class ManagedServiceFacade {
     public void startManagedService(String managedServiceGuid) {
         ManagedService managedService = findManagedServiceByGuid(managedServiceGuid);
         managedServiceContainerHelper.startManagedServiceContainer(managedService);
+//        inspect(containerId);
     }
 
 

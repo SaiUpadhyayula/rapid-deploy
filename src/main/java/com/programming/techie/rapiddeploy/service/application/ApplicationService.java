@@ -9,6 +9,7 @@ import com.programming.techie.rapiddeploy.payload.ApplicationPayload;
 import com.programming.techie.rapiddeploy.payload.ApplicationResponse;
 import com.programming.techie.rapiddeploy.repository.ApplicationRepository;
 import com.programming.techie.rapiddeploy.service.docker.DockerContainerService;
+import com.programming.techie.rapiddeploy.service.nginx.NginxService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
@@ -28,6 +29,7 @@ public class ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final ApplicationMapper applicationMapper;
     private final DockerContainerService dockerContainerService;
+    private final NginxService nginxService;
 
     public ApplicationResponse create(ApplicationPayload applicationPayload) {
         String applicationName = applicationPayload.getApplicationName();
@@ -72,14 +74,16 @@ public class ApplicationService {
         String imageId = application.getImageId();
         List<EnvironmentVariables> environmentVariables = application.getEnvironmentVariables();
         String name = application.getName();
+
         Pair<String, String> container = dockerContainerService.run(DockerContainerPayload.builder()
                 .imageId(imageId)
                 .environmentVariables(environmentVariables)
-                .name("srv-" + name)
+                .name(name)
                 .port(8080)
                 .exposedPort(8080)
                 .environmentVariables(application.getEnvironmentVariables())
                 .build());
+        nginxService.start(false);
         return container.getFirst();
     }
 
