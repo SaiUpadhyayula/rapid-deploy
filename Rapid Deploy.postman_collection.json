@@ -1,0 +1,252 @@
+{
+	"info": {
+		"_postman_id": "c383f3fc-c9e4-426d-8d6b-3f1eb60c0a8d",
+		"name": "Rapid Deploy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Application",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"applicationName\":\"spring-reddit-clone\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/application",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"application"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Service Template",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"MySQL\",\n    \"description\":\"Configure MySQL\",\n    \"portNumber\":\"3306\",\n    \"imageName\":\"mysql\",\n    \"tagName\":\"latest\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/admin/service-template/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"admin",
+						"service-template",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Managed Service",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/api/managed-service/start/9b508269-67ae-4efe-9eb0-e47cc02d6431",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"managed-service",
+						"start",
+						"9b508269-67ae-4efe-9eb0-e47cc02d6431"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload Source Code",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/Users/saiupadhyayula/IdeaProjects/spring-reddit-clone.zip"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/application/source-code/app/5796c807-8714-4a42-9045-952582313712",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"application",
+						"source-code",
+						"app",
+						"5796c807-8714-4a42-9045-952582313712"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check Container Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/api/container/status/f41de7a37c76246a810eefff2bf3c2dc0d34c64e983dc61d4e555b7ef2b13cb1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"container",
+						"status",
+						"f41de7a37c76246a810eefff2bf3c2dc0d34c64e983dc61d4e555b7ef2b13cb1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Start Application",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/application/5f8d1a6b-b8c3-422a-80a9-d98f37e92cf7/start",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"application",
+						"5f8d1a6b-b8c3-422a-80a9-d98f37e92cf7",
+						"start"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Managed Service",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"serviceTemplateGuid\":\"756405e1-2094-4183-a644-52c874314f3a\",\n    \"name\":\"reddit-clone-mysql\",\n    \"environmentVariables\":[\n        {\n            \"key\":\"MYSQL_ROOT_PASSWORD\",\n            \"value\":\"mysql\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/managed-service/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"managed-service",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Stop Application",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/api/application/d1f00de6-7217-422f-9170-cb02575a9dfc/stop",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"application",
+						"d1f00de6-7217-422f-9170-cb02575a9dfc",
+						"stop"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Git Clone",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"gitURL\":\"https://github.com/SaiUpadhyayula/test_rapid_deploy_sample\",\n    \"appGuid\":\"5f8d1a6b-b8c3-422a-80a9-d98f37e92cf7\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/source-code/git/clone",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"source-code",
+						"git",
+						"clone"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
