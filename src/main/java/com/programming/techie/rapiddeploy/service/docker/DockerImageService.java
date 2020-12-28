@@ -1,7 +1,6 @@
 package com.programming.techie.rapiddeploy.service.docker;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
 import com.github.dockerjava.core.command.PullImageResultCallback;
 import com.google.common.base.Preconditions;
@@ -11,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,17 +32,17 @@ public class DockerImageService {
     public void pullImage(String imageName, String tagName) {
         DockerClient client = DockerClientManager.getClient();
         try {
-            List<Image> images = client.listImagesCmd()
-                    .withImageNameFilter(String.format("%s:%s", imageName, tagName)).exec();
-            if (images.size() > 0) {
-                return;
-            }
-            client.pullImageCmd(imageName)
-                    .withTag(tagName)
-                    .exec(new PullImageResultCallback())
-                    .awaitCompletion();
+            client.inspectImageCmd(getImageId(imageName)).exec();
+            return;
         } catch (Exception e) {
-            throw new RapidDeployException("An exception occurred while pulling docker image for - " + imageName, e);
+            try {
+                client.pullImageCmd(imageName)
+                        .withTag(tagName)
+                        .exec(new PullImageResultCallback())
+                        .awaitCompletion();
+            } catch (Exception exception) {
+                throw new RapidDeployException("An exception occurred while pulling docker image for - " + imageName, e);
+            }
         }
     }
 

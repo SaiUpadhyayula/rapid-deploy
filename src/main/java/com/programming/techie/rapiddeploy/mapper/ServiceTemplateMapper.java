@@ -10,5 +10,6 @@ public interface ServiceTemplateMapper {
     ServiceTemplateDto map(ServiceTemplate serviceTemplate);
 
     @Mapping(target = "guid", expression = "java(java.util.UUID.randomUUID().toString())")
+    @Mapping(target = "id", ignore = true)
     ServiceTemplate mapPayload(ServiceTemplateDto serviceTemplatePayload);
 }

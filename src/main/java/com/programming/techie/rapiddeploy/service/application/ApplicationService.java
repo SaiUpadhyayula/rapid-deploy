@@ -38,6 +38,10 @@ public class ApplicationService {
                 .guid(UUID.randomUUID().toString())
                 .environmentVariables(Collections.emptyList())
                 .build();
+        applicationRepository.findByName(applicationPayload.getApplicationName())
+                .ifPresent(el -> {
+                    throw new RapidDeployException("Application Name - " + applicationName + " already in use, Please provide another name");
+                });
         applicationRepository.save(application);
         return applicationMapper.map(application);
     }
@@ -97,6 +101,12 @@ public class ApplicationService {
     public String getContainerId(String guid) {
         Application application = applicationRepository.findByGuid(guid)
                 .orElseThrow(() -> new RapidDeployException("Cannot find app by guid - " + guid));
+        return application.getContainerId();
+    }
+
+    public String getContainerIdByAppName(String appName) {
+        Application application = applicationRepository.findByName(appName)
+                .orElseThrow(() -> new RapidDeployException("Cannot find app by name - " + appName));
         return application.getContainerId();
     }
 }

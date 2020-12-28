@@ -87,4 +87,10 @@ public class ApplicationRestController {
         return ResponseEntity.status(OK)
                 .body(applicationService.getContainerId(guid));
     }
+
+    @GetMapping("/{appName}/container")
+    public ResponseEntity<String> getContainerIdByAppName(@PathVariable String appName) {
+        return ResponseEntity.status(OK)
+                .body(applicationService.getContainerIdByAppName(appName));
+    }
 }

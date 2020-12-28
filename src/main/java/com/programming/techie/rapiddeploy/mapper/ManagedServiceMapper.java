@@ -14,5 +14,7 @@ public interface ManagedServiceMapper {
     @Mapping(target = "environmentVariables", source = "managedServicePayload.environmentVariables")
     @Mapping(target = "name", source = "managedServicePayload.name")
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "logs", ignore = true)
+    @Mapping(target = "containerId", ignore = true)
     ManagedService map(ManagedServicePayload managedServicePayload, ServiceTemplate serviceTemplate);
 }

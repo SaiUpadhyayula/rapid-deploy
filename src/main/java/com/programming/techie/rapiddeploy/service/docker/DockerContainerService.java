@@ -33,7 +33,9 @@ public class DockerContainerService {
     public void createNetwork() {
         DockerClient client = DockerClientManager.getClient();
         List<Network> networks = client.listNetworksCmd().exec();
-        Optional<Network> rapidDeployNetwork = networks.stream().filter(network -> network.getName().equals(NETWORK_NAME)).findAny();
+        Optional<Network> rapidDeployNetwork = networks.stream()
+                .filter(network -> network.getName().equals(NETWORK_NAME))
+                .findAny();
         if (rapidDeployNetwork.isPresent()) {
             log.info("Network - {} already exists", NETWORK_NAME);
         } else {
@@ -65,12 +67,13 @@ public class DockerContainerService {
                     .withStdErr(true)
                     .withStdOut(true)
                     .withFollowStream(true)
-                    .withTailAll()
+                    .withTail(5)
                     .exec(callback)
                     .awaitCompletion(30, SECONDS);
         } catch (Exception ex) {
             throw new RapidDeployException("Exception Occurred when collecting Build Logs");
         }
+        log.info(stringBuilder.toString());
         return stringBuilder.toString();
     }
 

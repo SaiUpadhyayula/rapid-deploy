@@ -53,7 +53,7 @@ public class ApplicationBuildService {
                     .withStdErr(true)
                     .withStdOut(true)
                     .withFollowStream(true)
-                    .withTailAll()
+                    .withTail(5)
                     .exec(callback)
                     .awaitCompletion(5, SECONDS);
         } catch (Exception ex) {
