@@ -14,22 +14,22 @@ import static java.util.Collections.emptyList;
 @Slf4j
 public class CertbotManager {
 
+    public static final String CERTBOT = "certbot";
     private final DockerImageService dockerImageService;
     private final DockerContainerService dockerContainerService;
 
     public void start() {
-//        dockerImageService.pullImage("certbot", "latest");
-//        String certbotImageId = dockerImageService.getImageId("certbot");
-//        log.info("Starting Certbot Instance");
-//
+        dockerImageService.pullImage(CERTBOT, "latest");
+        String certbotImageId = dockerImageService.getImageId(CERTBOT);
+        log.info("Starting Certbot Instance");
+
 //        DockerContainerPayload payload = DockerContainerPayload.builder()
-//                .name("nginx")
+//                .name(CERTBOT)
 //                .port(80)
 //                .exposedPort(80)
 //                .imageId(certbotImageId)
-//                .mountSource(resolvePathForDefaultNginxConf())
-//                .mountTarget("/etc/nginx/nginx.conf")
 //                .environmentVariables(emptyList())
+//                .volumes()
 //                .build();
     }
 

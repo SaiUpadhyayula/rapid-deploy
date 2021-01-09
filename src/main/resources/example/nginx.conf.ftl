@@ -33,42 +33,68 @@ http {
 
     <#if !https>
     server {
-            listen 80;
+        listen 80;
+        listen [::]:80;
 
-            server_name _;
+        root /var/www/html;
+        index index.html index.htm index.nginx-debian.html;
 
-            location /.well-known/acme-challenge/ {
-                root /var/www/certbot;
-            }
+        server_name _;
 
-            location / {
-                <#if !forceSSL>
-                    proxy_pass http://web-app;
-                </#if>
-                <#if forceSSL>
-                    return 301 https://web-app;
-                </#if>
-            }
+        location / {
+            proxy_pass http://web-app;
+        }
+
+        location ~ /.well-known/acme-challenge {
+            allow all;
+            root /var/www/html;
+        }
     }
     </#if>
     <#if https>
-        server {
-            listen 443 ssl;
+    server {
+            listen 443 ssl http2;
+            listen [::]:443 ssl http2;
+            server_name example.com www.example.com;
 
-            server_name _;
             server_tokens off;
 
-            ssl_certificate /etc/letsencrypt/live/$domain/fullchain.pem;
-            ssl_certificate_key /etc/letsencrypt/live/example.org/privkey.pem;
-            include /etc/letsencrypt/options-ssl-nginx.conf;
-            ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+            ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+            ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
+
+            ssl_buffer_size 8k;
+
+            ssl_dhparam /etc/ssl/certs/dhparam-2048.pem;
+
+            ssl_protocols TLSv1.2 TLSv1.1 TLSv1;
+            ssl_prefer_server_ciphers on;
+
+            ssl_ciphers ECDH+AESGCM:ECDH+AES256:ECDH+AES128:DH+3DES:!ADH:!AECDH:!MD5;
+
+            ssl_ecdh_curve secp384r1;
+            ssl_session_tickets off;
+
+            ssl_stapling on;
+            ssl_stapling_verify on;
+            resolver 8.8.8.8;
 
             location / {
-                proxy_pass http://web-app;
-                proxy_set_header    Host                $http_host;
-                proxy_set_header    X-Real-IP           $remote_addr;
-                proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
+                try_files $uri @nodejs;
             }
-        }
+
+            location @nodejs {
+                proxy_pass http://nodejs:8080;
+                add_header X-Frame-Options "SAMEORIGIN" always;
+                add_header X-XSS-Protection "1; mode=block" always;
+                add_header X-Content-Type-Options "nosniff" always;
+                add_header Referrer-Policy "no-referrer-when-downgrade" always;
+                add_header Content-Security-Policy "default-src * data: 'unsafe-eval' 'unsafe-inline'" always;
+                # add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
+                # enable strict transport security only if you understand the implications
+            }
+
+            root /var/www/html;
+            index index.html index.htm index.nginx-debian.html;
+    }
     </#if>
 }

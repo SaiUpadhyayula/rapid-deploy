@@ -24,6 +24,7 @@ import static com.programming.techie.rapiddeploy.util.RapidDeployConstants.RAPID
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
@@ -88,6 +89,8 @@ public class DockerContainerService {
         Pair<ExposedPort, Ports> portMappings = constructPortMappings(dockerContainerPayload);
         String[] envVarArgs = resolveEnvironmentVariables(dockerContainerPayload);
 
+        List<VolumesFrom> volumesFrom = dockerContainerPayload.getVolumes().stream().map(VolumesFrom::new).collect(toList());
+
         CreateContainerResponse container = dockerClient.createContainerCmd(dockerContainerPayload.getImageId())
                 .withEnv(envVarArgs)
                 .withName(RAPID_DEPLOY_SERVICE_PREFIX + dockerContainerPayload.getName())
@@ -96,7 +99,8 @@ public class DockerContainerService {
                         .withNetworkMode(NETWORK_NAME)
                         .withAutoRemove(true)
                         .withMounts(createVolumeMount(dockerContainerPayload))
-                        .withPortBindings(portMappings.getSecond()))
+                        .withPortBindings(portMappings.getSecond())
+                        .withVolumesFrom(volumesFrom))
                 .exec();
         dockerClient.startContainerCmd(container.getId()).exec();
         log.info("Container ID - {}", container.getId());

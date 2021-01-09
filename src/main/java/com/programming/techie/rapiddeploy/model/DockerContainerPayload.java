@@ -15,4 +15,5 @@ public class DockerContainerPayload {
     private String mountSource;
     private String mountTarget;
     private Integer exposedPort;
+    private List<String> volumes;
 }

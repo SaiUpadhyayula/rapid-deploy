@@ -1,7 +1,6 @@
 package com.programming.techie.rapiddeploy.service.nginx;
 
 import com.programming.techie.rapiddeploy.model.DockerContainerPayload;
-import com.programming.techie.rapiddeploy.service.certbot.CertbotManager;
 import com.programming.techie.rapiddeploy.service.docker.DockerContainerService;
 import com.programming.techie.rapiddeploy.service.docker.DockerImageService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static com.programming.techie.rapiddeploy.util.RapidDeployConstants.NGINX;
@@ -27,7 +27,7 @@ public class NginxService {
 
     private final DockerContainerService dockerContainerService;
     private final DockerImageService dockerImageService;
-    private final CertbotManager certbotManager;
+//    private final CertbotManager certbotManager;
 
     @SneakyThrows
     public void start(Boolean enableHttps) {
@@ -48,6 +48,9 @@ public class NginxService {
                 .mountSource(resolvePathForDefaultNginxConf())
                 .mountTarget("/etc/nginx/nginx.conf")
                 .environmentVariables(emptyList())
+                .volumes(Arrays.asList("web-root:/var/www/html",
+                        "certbot-etc:/etc/letsencrypt",
+                        "certbot-var:/var/lib/letsencrypt"))
                 .build();
         dockerContainerService.run(payload);
     }
