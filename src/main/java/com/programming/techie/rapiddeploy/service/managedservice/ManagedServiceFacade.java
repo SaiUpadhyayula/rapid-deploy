@@ -1,5 +1,6 @@
 package com.programming.techie.rapiddeploy.service.managedservice;
 
+import com.programming.techie.rapiddeploy.dto.ManagedServiceResponse;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.mapper.ManagedServiceMapper;
 import com.programming.techie.rapiddeploy.model.ManagedService;
@@ -12,6 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -31,7 +34,7 @@ public class ManagedServiceFacade {
 
     public String createManagedService(ManagedServicePayload managedServicePayload) {
         ServiceTemplate serviceTemplate = serviceTemplateFacade.findServiceTemplate(managedServicePayload.getServiceTemplateGuid());
-        ManagedService managedService = managedServiceMapper.map(managedServicePayload, serviceTemplate);
+        ManagedService managedService = managedServiceMapper.mapFromDto(managedServicePayload, serviceTemplate);
         Pair<String, String> containerIdNamePair = managedServiceContainerHelper.startManagedServiceContainerWithPull(managedService);
         managedService.setContainerId(containerIdNamePair.getFirst());
         managedServiceRepository.save(managedService);
@@ -42,7 +45,7 @@ public class ManagedServiceFacade {
         ManagedService existingManagedService = findManagedServiceByGuid(managedServicePayload.getManagedServiceGuid());
 
         ServiceTemplate serviceTemplate = serviceTemplateFacade.findServiceTemplate(managedServicePayload.getServiceTemplateGuid());
-        ManagedService managedService = managedServiceMapper.map(managedServicePayload, serviceTemplate);
+        ManagedService managedService = managedServiceMapper.mapFromDto(managedServicePayload, serviceTemplate);
         managedService.setId(existingManagedService.getId());
         managedService.setGuid(existingManagedService.getGuid());
 
@@ -66,5 +69,9 @@ public class ManagedServiceFacade {
     private ManagedService findManagedServiceByGuid(String managedServiceGuid) {
         return managedServiceRepository.findByGuid(managedServiceGuid)
                 .orElseThrow(() -> new RapidDeployException("Cannot find Managed Service with GUID - " + managedServiceGuid));
+    }
+
+    public List<ManagedServiceResponse> getAll() {
+        return managedServiceMapper.mapToDtoList(managedServiceRepository.findAll());
     }
 }

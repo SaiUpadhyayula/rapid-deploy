@@ -67,9 +67,9 @@ public class DockerContainerService {
                     .withStdErr(true)
                     .withStdOut(true)
                     .withFollowStream(true)
-                    .withTail(5)
+                    .withTail(100)
                     .exec(callback)
-                    .awaitCompletion(30, SECONDS);
+                    .awaitCompletion(120, SECONDS);
         } catch (Exception ex) {
             throw new RapidDeployException("Exception Occurred when collecting Build Logs");
         }

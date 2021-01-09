@@ -1,5 +1,6 @@
 package com.programming.techie.rapiddeploy.controller;
 
+import com.programming.techie.rapiddeploy.dto.ManagedServiceResponse;
 import com.programming.techie.rapiddeploy.model.ManagedServicePayload;
 import com.programming.techie.rapiddeploy.payload.ServiceTemplateDto;
 import com.programming.techie.rapiddeploy.service.managedservice.ManagedServiceFacade;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -43,5 +46,10 @@ public class ManagedServiceRestController {
     @GetMapping("inspect/{managedServiceGuid}")
     public ResponseEntity<String> getLogs(@PathVariable String managedServiceGuid) {
         return ResponseEntity.status(OK).body(managedServiceFacade.inspect(managedServiceGuid));
+    }
+
+    @GetMapping
+    public List<ManagedServiceResponse> getAllManagedServices() {
+        return managedServiceFacade.getAll();
     }
 }

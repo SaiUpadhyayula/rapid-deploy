@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class DockerImageService {
         log.info("Building Docker Image..");
         DockerClient dockerClient = DockerClientManager.getClient();
         String imageId = dockerClient.buildImageCmd()
+                .withTags(Collections.singleton("latest"))
                 .withDockerfile(dockerFile)
                 .withPull(true)
                 .withNoCache(true)

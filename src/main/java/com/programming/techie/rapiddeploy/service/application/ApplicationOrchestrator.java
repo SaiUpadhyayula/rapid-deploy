@@ -36,7 +36,7 @@ public class ApplicationOrchestrator {
         Pair<String, Application> pair = buildImage(file, application);
         String imageId = pair.getFirst();
         application = pair.getSecond();
-
+//        dockerPushService.push(imageId);
         String containerId = dockerContainerService.run(DockerContainerPayload.builder()
                 .imageId(imageId)
                 .environmentVariables(Collections.emptyList())
