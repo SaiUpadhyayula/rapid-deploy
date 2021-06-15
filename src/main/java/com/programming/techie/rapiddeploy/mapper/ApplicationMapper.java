@@ -2,12 +2,15 @@ package com.programming.techie.rapiddeploy.mapper;
 
 import com.programming.techie.rapiddeploy.model.Application;
 import com.programming.techie.rapiddeploy.payload.ApplicationResponse;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Service;
 
-@Mapper(componentModel = "spring")
-public interface ApplicationMapper {
+@Service
+public class ApplicationMapper {
 
-    @Mapping(target = "applicationName", source = "name")
-    ApplicationResponse map(Application application);
+    public ApplicationResponse map(Application application) {
+        return ApplicationResponse.builder()
+                .applicationName(application.getName())
+                .guid(application.getGuid())
+                .build();
+    }
 }
