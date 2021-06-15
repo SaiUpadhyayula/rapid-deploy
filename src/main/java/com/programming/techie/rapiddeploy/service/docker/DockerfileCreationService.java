@@ -29,6 +29,7 @@ public class DockerfileCreationService {
         dockerfileFactoryMap.put(SupportedLanguage.PYTHON, new PythonDockerfileFactory());
         dockerfileFactoryMap.put(SupportedLanguage.PHP, new PhpDockerfileFactory());
         dockerfileFactoryMap.put(SupportedLanguage.RUBY, new RubyDockerfileFactory());
+        dockerfileFactoryMap.put(SupportedLanguage.HTML, new HtmlDockerFileFactory());
     }
 
     public void create(YamlParsingCompleted yamlParsingCompleted) {
@@ -44,7 +45,9 @@ public class DockerfileCreationService {
 
     @SneakyThrows
     private void createProcFile(Path extractedFilePath, ManifestDefinition manifestDefinition) {
-        Path dockerFilePath = Paths.get(extractedFilePath.toAbsolutePath().toString() + File.separator + "Procfile").toAbsolutePath();
+        if (manifestDefinition.getRun() == null)
+            return;
+        Path dockerFilePath = Paths.get(extractedFilePath.toAbsolutePath() + File.separator + "Procfile").toAbsolutePath();
         Files.write(dockerFilePath, buildProcFileContent(manifestDefinition.getRun()).getBytes()).toFile();
     }
 
@@ -54,7 +57,7 @@ public class DockerfileCreationService {
 
     @SneakyThrows
     private File createDockerFile(Path extractedFilePath, String dockerFileContent) {
-        Path dockerFilePath = Paths.get(extractedFilePath.toAbsolutePath().toString() + File.separator + "Dockerfile").toAbsolutePath();
+        Path dockerFilePath = Paths.get(extractedFilePath.toAbsolutePath() + File.separator + "Dockerfile").toAbsolutePath();
         return Files.write(dockerFilePath, dockerFileContent.getBytes()).toFile();
     }
 }

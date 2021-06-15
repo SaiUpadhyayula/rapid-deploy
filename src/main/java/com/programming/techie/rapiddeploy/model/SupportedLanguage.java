@@ -9,9 +9,10 @@ public enum SupportedLanguage {
     NODEJS("node-js"),
     PYTHON("python"),
     PHP("php"),
-    RUBY("ruby");
+    RUBY("ruby"),
+    HTML("html");
 
-    private String value;
+    private final String value;
 
     SupportedLanguage(String value) {
         this.value = value;

@@ -3,7 +3,6 @@ package com.programming.techie.rapiddeploy.service.files;
 import com.programming.techie.rapiddeploy.dto.YamlParsingCompleted;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.model.ManifestDefinition;
-import com.programming.techie.rapiddeploy.model.SupportedLanguage;
 import com.programming.techie.rapiddeploy.service.docker.DockerfileCreationService;
 import com.programming.techie.rapiddeploy.util.RapidDeployConstants;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +30,6 @@ public class ManifestDefinitionFileParsingService {
             Path manifestFilePath = findManifestFile(extractedFilePath);
             InputStream inputStream = Files.newInputStream(manifestFilePath);
             ManifestDefinition manifestDefinition = yaml.load(inputStream);
-            validateManifestDefinition(manifestDefinition);
             YamlParsingCompleted yamlParsingCompleted = new YamlParsingCompleted(manifestDefinition,
                     extractedFilePath, guid);
             dockerfileCreationService.create(yamlParsingCompleted);
@@ -46,11 +44,5 @@ public class ManifestDefinitionFileParsingService {
                         .equals(RapidDeployConstants.MANIFEST_FILE)))
                 .findAny().orElseThrow(() -> new RapidDeployException("Cannot find manifest.yml file inside the folder, " +
                         "Please Check"));
-    }
-
-    private void validateManifestDefinition(ManifestDefinition manifestDefinition) {
-        if (!manifestDefinition.getLanguage().equals(SupportedLanguage.JAVA.getValue())) {
-            throw new RapidDeployException(manifestDefinition.getLanguage() + " is not supported!! We only support Java for now");
-        }
     }
 }

@@ -62,7 +62,7 @@ public class ApplicationService {
     }
 
     public void update(ApplicationPayload applicationPayload) {
-
+        // To be implemented
     }
 
     private ApplicationResponse findAppByGuid(String guid) {
@@ -83,11 +83,11 @@ public class ApplicationService {
                 .imageId(imageId)
                 .environmentVariables(environmentVariables)
                 .name(name)
-                .port(8080)
-                .exposedPort(8081)
+                .port(4200)
+                .exposedPort(4200)
+                .volumes(Collections.emptyList())
                 .environmentVariables(application.getEnvironmentVariables())
                 .build());
-        nginxService.start(false);
         return container.getFirst();
     }
 

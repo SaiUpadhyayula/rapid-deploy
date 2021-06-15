@@ -35,7 +35,6 @@ public class DockerImageService {
         DockerClient client = DockerClientManager.getClient();
         try {
             client.inspectImageCmd(getImageId(imageName)).exec();
-            return;
         } catch (Exception e) {
             try {
                 client.pullImageCmd(imageName)

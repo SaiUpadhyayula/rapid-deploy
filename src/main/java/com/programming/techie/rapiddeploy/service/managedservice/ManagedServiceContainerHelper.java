@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -29,6 +31,7 @@ public class ManagedServiceContainerHelper {
                 .environmentVariables(managedService.getEnvironmentVariables())
                 .name(managedService.getName())
                 .port(managedService.getServiceTemplate().getPortNumber())
+                .volumes(Collections.emptyList())
                 .exposedPort(managedService.getServiceTemplate().getPortNumber())
                 .build());
     }

@@ -41,12 +41,12 @@ public class ApplicationOrchestrator {
                 .imageId(imageId)
                 .environmentVariables(Collections.emptyList())
                 .name(application.getName())
-                .port(8080)
-                .exposedPort(8081)
+                .port(4200)
+                .exposedPort(4200)
+                .volumes(Collections.emptyList())
                 .build()).getFirst();
-        nginxService.start(false);
+//        nginxService.start(false);
         application.setContainerId(containerId);
-        application.setImageId(imageId);
         application.setApplicationState(STARTED);
         applicationRepository.save(application);
     }
@@ -56,6 +56,7 @@ public class ApplicationOrchestrator {
         applicationRepository.save(application);
         String imageId = dockerImageService.buildDockerImage(file);
         application.setBuildState(SUCCESS);
+        application.setImageId(imageId);
         applicationRepository.save(application);
         return of(imageId, application);
     }
