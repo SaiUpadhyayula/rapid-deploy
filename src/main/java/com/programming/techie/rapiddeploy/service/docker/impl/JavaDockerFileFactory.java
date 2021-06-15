@@ -1,6 +1,5 @@
 package com.programming.techie.rapiddeploy.service.docker.impl;
 
-import com.google.common.collect.ImmutableList;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.model.ManifestDefinition;
 import com.programming.techie.rapiddeploy.service.docker.DockerfileFactory;
@@ -15,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.programming.techie.rapiddeploy.util.RapidDeployConstants.*;
@@ -24,7 +24,7 @@ import static java.nio.file.Files.find;
 @Slf4j
 public class JavaDockerFileFactory implements DockerfileFactory {
 
-    private final ImmutableList<String> rootFileList = ImmutableList.of(POM_XML, BUILD_GRADLE);
+    private final List<String> rootFileList = List.of(POM_XML, BUILD_GRADLE);
 
     @Override
     public String createDockerFileContent(Path extractedFilePath, ManifestDefinition manifestDefinition) {

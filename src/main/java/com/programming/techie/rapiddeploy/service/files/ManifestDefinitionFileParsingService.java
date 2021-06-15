@@ -24,7 +24,7 @@ public class ManifestDefinitionFileParsingService {
     private final DockerfileCreationService dockerfileCreationService;
 
     public void parse(String guid, Path extractedFilePath) {
-        Yaml yaml = new Yaml(new Constructor(ManifestDefinition.class));
+        var yaml = new Yaml(new Constructor(ManifestDefinition.class));
 
         try {
             Path manifestFilePath = findManifestFile(extractedFilePath);
