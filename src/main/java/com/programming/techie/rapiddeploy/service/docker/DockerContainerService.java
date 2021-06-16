@@ -9,6 +9,7 @@ import com.google.common.base.Preconditions;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.model.DockerContainerPayload;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
@@ -105,7 +106,7 @@ public class DockerContainerService {
         dockerClient.startContainerCmd(container.getId()).exec();
         log.info("Container ID - {}", container.getId());
         log.info("Running container exposed at - {}", portMappings.getSecond());
-        inspectContainer(container.getId());
+//        inspectContainer(container.getId());
         return Pair.of(container.getId(), containerName);
     }
 
@@ -139,6 +140,8 @@ public class DockerContainerService {
     }
 
     private String[] resolveEnvironmentVariables(DockerContainerPayload dockerContainerPayload) {
+        if (dockerContainerPayload.getEnvironmentVariables() == null)
+            return ArrayUtils.EMPTY_STRING_ARRAY;
         return dockerContainerPayload.getEnvironmentVariables()
                 .stream()
                 .map(env -> env.getKey() + "=" + env.getValue()).toArray(String[]::new);
