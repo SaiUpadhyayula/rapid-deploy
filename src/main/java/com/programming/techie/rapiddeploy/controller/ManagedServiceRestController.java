@@ -5,13 +5,12 @@ import com.programming.techie.rapiddeploy.model.ManagedServicePayload;
 import com.programming.techie.rapiddeploy.payload.ServiceTemplateDto;
 import com.programming.techie.rapiddeploy.service.managedservice.ManagedServiceFacade;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -22,33 +21,38 @@ public class ManagedServiceRestController {
     private final ManagedServiceFacade managedServiceFacade;
 
     @PostMapping("init")
-    public ResponseEntity<ServiceTemplateDto> init(@Valid @RequestBody ServiceTemplateDto serviceTemplatePayload) {
-        return ResponseEntity.status(OK)
-                .body(managedServiceFacade.initManagedService(serviceTemplatePayload));
+    @ResponseStatus(OK)
+    public ServiceTemplateDto init(@Valid @RequestBody ServiceTemplateDto serviceTemplatePayload) {
+        return managedServiceFacade.initManagedService(serviceTemplatePayload);
     }
 
     @GetMapping("start/{managedServiceGuid}")
-    public ResponseEntity<String> startContainer(@PathVariable String managedServiceGuid) {
+    @ResponseStatus(OK)
+    public String startContainer(@PathVariable String managedServiceGuid) {
         managedServiceFacade.startManagedService(managedServiceGuid);
-        return ResponseEntity.status(OK).body("Managed Service Started Successfully");
+        return "Managed Service Started Successfully";
     }
 
     @PostMapping
-    public ResponseEntity<String> create(@Valid @RequestBody ManagedServicePayload managedServicePayload) {
-        return ResponseEntity.status(OK).body(managedServiceFacade.createManagedService(managedServicePayload));
+    @ResponseStatus(CREATED)
+    public String create(@Valid @RequestBody ManagedServicePayload managedServicePayload) {
+        return managedServiceFacade.createManagedService(managedServicePayload);
     }
 
     @PutMapping
+    @ResponseStatus(OK)
     public void update(@Valid @RequestBody ManagedServicePayload managedServicePayload) {
         managedServiceFacade.updateManagedService(managedServicePayload);
     }
 
     @GetMapping("inspect/{managedServiceGuid}")
-    public ResponseEntity<String> getLogs(@PathVariable String managedServiceGuid) {
-        return ResponseEntity.status(OK).body(managedServiceFacade.inspect(managedServiceGuid));
+    @ResponseStatus(OK)
+    public String getLogs(@PathVariable String managedServiceGuid) {
+        return managedServiceFacade.inspect(managedServiceGuid);
     }
 
     @GetMapping
+    @ResponseStatus(OK)
     public List<ManagedServiceResponse> getAllManagedServices() {
         return managedServiceFacade.getAll();
     }

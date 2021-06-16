@@ -5,10 +5,7 @@ import com.programming.techie.rapiddeploy.service.application.ApplicationBuildSe
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.OK;
 
@@ -21,8 +18,8 @@ public class ContainerStatusRestController {
     private final ApplicationBuildService applicationBuildService;
 
     @GetMapping("/{containerId}")
-    public ResponseEntity<BuildLogsResponse> inspectBuild(@PathVariable String containerId) {
-        return ResponseEntity.status(OK)
-                .body(applicationBuildService.inspectBuild(containerId));
+    @ResponseStatus(OK)
+    public BuildLogsResponse inspectBuild(@PathVariable String containerId) {
+        return applicationBuildService.inspectBuild(containerId);
     }
 }

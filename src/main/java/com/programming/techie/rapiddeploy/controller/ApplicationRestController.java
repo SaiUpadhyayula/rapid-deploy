@@ -29,42 +29,46 @@ public class ApplicationRestController {
 
 
     @PostMapping
-    public ResponseEntity<ApplicationResponse> create(@Valid @RequestBody ApplicationPayload applicationPayload) {
-        return ResponseEntity.status(CREATED)
-                .body(applicationService.create(applicationPayload));
+    @ResponseStatus(CREATED)
+    public ApplicationResponse create(@Valid @RequestBody ApplicationPayload applicationPayload) {
+        return applicationService.create(applicationPayload);
     }
 
     @PutMapping
-    public ResponseEntity<ApplicationResponse> update(@Valid @RequestBody ApplicationPayload applicationPayload) {
-        applicationService.update(applicationPayload);
-        return null;
+    @ResponseStatus(OK)
+    public ApplicationResponse update(@Valid @RequestBody ApplicationPayload applicationPayload) {
+        return applicationService.update(applicationPayload);
     }
 
     @GetMapping
-    public ResponseEntity<List<ApplicationResponse>> getAll() {
-        return ResponseEntity.status(OK).body(applicationService.getAll());
+    @ResponseStatus(OK)
+    public List<ApplicationResponse> getAll() {
+        return applicationService.getAll();
     }
 
     @GetMapping("/{guid}")
-    public ResponseEntity<ApplicationResponse> getOne(@PathVariable String guid) {
-        return ResponseEntity.status(OK).body(applicationService.getOne(guid));
+    @ResponseStatus(OK)
+    public ApplicationResponse getOne(@PathVariable String guid) {
+        return applicationService.getOne(guid);
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestParam("guid") String guid) {
+    @ResponseStatus(NO_CONTENT)
+    public void delete(@RequestParam("guid") String guid) {
         applicationService.delete(guid);
-        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     @GetMapping("/{guid}/start")
-    public ResponseEntity<String> startApplication(@PathVariable String guid) {
-        return ResponseEntity.status(OK).body(applicationService.startApplicationContainer(guid));
+    @ResponseStatus(OK)
+    public String startApplication(@PathVariable String guid) {
+        return applicationService.startApplicationContainer(guid);
     }
 
     @GetMapping("/{guid}/stop")
-    public ResponseEntity<String> stopApplication(@PathVariable String guid) {
+    @ResponseStatus(OK)
+    public String stopApplication(@PathVariable String guid) {
         applicationService.stopApplicationContainer(guid);
-        return ResponseEntity.status(OK).body("Application Stopped");
+        return "Application Stopped";
     }
 
     @PostMapping("/source-code/app/{guid}")
@@ -83,14 +87,14 @@ public class ApplicationRestController {
     }
 
     @GetMapping("/{guid}/container")
-    public ResponseEntity<String> getContainerId(@PathVariable String guid) {
-        return ResponseEntity.status(OK)
-                .body(applicationService.getContainerId(guid));
+    @ResponseStatus(OK)
+    public String getContainerId(@PathVariable String guid) {
+        return applicationService.getContainerId(guid);
     }
 
     @GetMapping("/{appName}/container")
-    public ResponseEntity<String> getContainerIdByAppName(@PathVariable String appName) {
-        return ResponseEntity.status(OK)
-                .body(applicationService.getContainerIdByAppName(appName));
+    @ResponseStatus(OK)
+    public String getContainerIdByAppName(@PathVariable String appName) {
+        return applicationService.getContainerIdByAppName(appName);
     }
 }
