@@ -8,8 +8,4 @@ import java.nio.file.Path;
 
 @Service
 public class PhpDockerfileFactory implements DockerfileFactory {
-    @Override
-    public String createDockerFileContent(Path extractedFilePath, ManifestDefinition manifestDefinition) {
-        return null;
-    }
 }
