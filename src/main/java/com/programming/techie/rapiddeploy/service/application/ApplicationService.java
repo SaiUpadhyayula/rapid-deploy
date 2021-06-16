@@ -70,6 +70,7 @@ public class ApplicationService {
 
         application.setName(applicationPayload.getApplicationName());
         application.setEnvironmentVariables(applicationPayload.getEnvironmentVariablesList());
+        application.setPort(applicationPayload.getPort());
 
         return applicationMapper.map(applicationRepository.save(application));
     }
@@ -97,6 +98,9 @@ public class ApplicationService {
                 .volumes(Collections.emptyList())
                 .environmentVariables(application.getEnvironmentVariables())
                 .build());
+
+        application.setContainerId(container.getFirst());
+        applicationRepository.save(application);
         return container.getFirst();
     }
 
