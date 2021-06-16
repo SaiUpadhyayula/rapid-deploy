@@ -10,7 +10,5 @@ import lombok.NoArgsConstructor;
 public class ManifestDefinition {
     private String name;
     private String language;
-    private String version;
-    private String build;
     private String run;
 }
