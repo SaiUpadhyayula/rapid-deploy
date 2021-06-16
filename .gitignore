@@ -32,3 +32,17 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Frontend ###
+# compiled output
+src/main/resources/frontend/dist
+src/main/resources/frontend/tmp
+src/main/resources/frontend/out-tsc
+# Only exists if Bazel was run
+src/main/resources/frontend/bazel-out
+
+# dependencies
+src/main/resources/frontend/node_modules
+
+# profiling files
+src/main/resources/frontend/chrome-profiler-events*.json

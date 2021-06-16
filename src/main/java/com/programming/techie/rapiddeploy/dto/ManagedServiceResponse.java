@@ -1,10 +1,7 @@
 package com.programming.techie.rapiddeploy.dto;
 
 import com.programming.techie.rapiddeploy.model.EnvironmentVariables;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,6 +9,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ManagedServiceResponse {
     private String serviceTemplateGuid;
     private String managedServiceGuid;
