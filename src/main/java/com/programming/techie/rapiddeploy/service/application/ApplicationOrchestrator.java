@@ -41,8 +41,8 @@ public class ApplicationOrchestrator {
                 .imageId(imageId)
                 .environmentVariables(Collections.emptyList())
                 .name(application.getName())
-                .port(4200)
-                .exposedPort(4200)
+                .port(application.getPort())
+                .exposedPort(application.getPort())
                 .volumes(Collections.emptyList())
                 .build()).getFirst();
 //        nginxService.start(false);

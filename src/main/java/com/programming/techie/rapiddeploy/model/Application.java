@@ -28,4 +28,5 @@ public class Application {
     private String containerId;
     private String imageId;
     private List<EnvironmentVariables> environmentVariables;
+    private Integer port;
 }

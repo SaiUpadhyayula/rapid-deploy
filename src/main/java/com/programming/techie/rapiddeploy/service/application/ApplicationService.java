@@ -1,5 +1,7 @@
 package com.programming.techie.rapiddeploy.service.application;
 
+import com.programming.techie.rapiddeploy.exceptions.ApplicationAlreadyExistsException;
+import com.programming.techie.rapiddeploy.exceptions.ApplicationNotFoundException;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.mapper.ApplicationMapper;
 import com.programming.techie.rapiddeploy.model.Application;
@@ -37,10 +39,11 @@ public class ApplicationService {
                 .name(applicationName)
                 .guid(UUID.randomUUID().toString())
                 .environmentVariables(Collections.emptyList())
+                .port(applicationPayload.getPort())
                 .build();
         applicationRepository.findByName(applicationPayload.getApplicationName())
                 .ifPresent(el -> {
-                    throw new RapidDeployException("Application Name - " + applicationName + " already in use, Please provide another name");
+                    throw new ApplicationAlreadyExistsException("Application Name - " + applicationName + " already in use, Please provide another name");
                 });
         applicationRepository.save(application);
         return applicationMapper.map(application);
@@ -61,8 +64,14 @@ public class ApplicationService {
         applicationRepository.deleteByGuid(guid);
     }
 
-    public void update(ApplicationPayload applicationPayload) {
-        // To be implemented
+    public ApplicationResponse update(ApplicationPayload applicationPayload) {
+        var application = applicationRepository.findByGuid(applicationPayload.getGuid())
+                .orElseThrow(() -> new ApplicationNotFoundException("No Application exists with guid - " + applicationPayload.getGuid()));
+
+        application.setName(applicationPayload.getApplicationName());
+        application.setEnvironmentVariables(applicationPayload.getEnvironmentVariablesList());
+
+        return applicationMapper.map(applicationRepository.save(application));
     }
 
     private ApplicationResponse findAppByGuid(String guid) {
@@ -83,8 +92,8 @@ public class ApplicationService {
                 .imageId(imageId)
                 .environmentVariables(environmentVariables)
                 .name(name)
-                .port(4200)
-                .exposedPort(4200)
+                .port(application.getPort())
+                .exposedPort(application.getPort())
                 .volumes(Collections.emptyList())
                 .environmentVariables(application.getEnvironmentVariables())
                 .build());

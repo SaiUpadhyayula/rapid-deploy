@@ -11,6 +11,7 @@ public class ApplicationMapper {
         return ApplicationResponse.builder()
                 .applicationName(application.getName())
                 .guid(application.getGuid())
+                .port(application.getPort())
                 .build();
     }
 }
