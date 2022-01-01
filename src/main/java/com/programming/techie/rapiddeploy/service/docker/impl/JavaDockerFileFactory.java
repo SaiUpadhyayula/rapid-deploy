@@ -37,7 +37,7 @@ public class JavaDockerFileFactory implements DockerfileFactory {
         }
 
         String dockerFile =
-                "FROM gliderlabs/herokuish:latest" + System.lineSeparator() +
+                "FROM gliderlabs/herokuish:0.5.29" + System.lineSeparator() +
                         "COPY . /app" + System.lineSeparator() +
                         "ENV PORT %s" + System.lineSeparator() +
                         "EXPOSE %s" + System.lineSeparator() +

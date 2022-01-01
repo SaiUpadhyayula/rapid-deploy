@@ -41,7 +41,8 @@ public class DockerImageService {
                         .withTag(tagName)
                         .exec(new PullImageResultCallback())
                         .awaitCompletion();
-            } catch (Exception exception) {
+            } catch (InterruptedException exception) {
+                Thread.currentThread().interrupt();
                 throw new RapidDeployException("An exception occurred while pulling docker image for - " + imageName, e);
             }
         }

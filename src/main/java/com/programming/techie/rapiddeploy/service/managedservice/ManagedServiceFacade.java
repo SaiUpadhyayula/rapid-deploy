@@ -34,7 +34,7 @@ public class ManagedServiceFacade {
 
     public String createManagedService(ManagedServicePayload managedServicePayload) {
         ServiceTemplate serviceTemplate = serviceTemplateFacade.findServiceTemplate(managedServicePayload.getServiceTemplateGuid());
-        ManagedService managedService = managedServiceMapper.mapFromDto(managedServicePayload, serviceTemplate);
+        ManagedService managedService = managedServiceMapper.map(managedServicePayload, serviceTemplate);
         Pair<String, String> containerIdNamePair = managedServiceContainerHelper.startManagedServiceContainerWithPull(managedService);
         managedService.setContainerId(containerIdNamePair.getFirst());
         managedServiceRepository.save(managedService);
@@ -45,7 +45,7 @@ public class ManagedServiceFacade {
         ManagedService existingManagedService = findManagedServiceByGuid(managedServicePayload.getManagedServiceGuid());
 
         ServiceTemplate serviceTemplate = serviceTemplateFacade.findServiceTemplate(managedServicePayload.getServiceTemplateGuid());
-        ManagedService managedService = managedServiceMapper.mapFromDto(managedServicePayload, serviceTemplate);
+        ManagedService managedService = managedServiceMapper.map(managedServicePayload, serviceTemplate);
         managedService.setId(existingManagedService.getId());
         managedService.setGuid(existingManagedService.getGuid());
 

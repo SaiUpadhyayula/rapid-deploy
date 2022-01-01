@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ManagedServiceMapper {
-    public ManagedService mapFromDto(ManagedServicePayload managedServicePayload, ServiceTemplate serviceTemplate) {
+    public ManagedService map(ManagedServicePayload managedServicePayload, ServiceTemplate serviceTemplate) {
         return ManagedService.builder()
                 .guid(UUID.randomUUID().toString())
                 .serviceTemplate(serviceTemplate)
@@ -22,15 +22,16 @@ public class ManagedServiceMapper {
     }
 
     public List<ManagedServiceResponse> mapToDtoList(List<ManagedService> managedServices) {
-        return managedServices.stream().map(this::mapToDto).collect(Collectors.toList());
+        return managedServices.stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
-    ManagedServiceResponse mapToDto(ManagedService managedServices) {
+    private ManagedServiceResponse mapToResponse(ManagedService service) {
         return ManagedServiceResponse.builder()
-                .managedServiceGuid(managedServices.getGuid())
-                .name(managedServices.getName())
-                .serviceTemplateGuid(managedServices.getServiceTemplate().getGuid())
-                .environmentVariables(managedServices.getEnvironmentVariables())
-                .build();
+                .serviceTemplateGuid(service.getServiceTemplate().getGuid())
+                .managedServiceGuid(service.getGuid())
+                .name(service.getName())
+                .environmentVariables(service.getEnvironmentVariables()).build();
     }
 }

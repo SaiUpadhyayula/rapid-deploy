@@ -5,9 +5,9 @@ import com.programming.techie.rapiddeploy.model.ManagedServicePayload;
 import com.programming.techie.rapiddeploy.payload.ServiceTemplateDto;
 import com.programming.techie.rapiddeploy.service.managedservice.ManagedServiceFacade;
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -22,7 +22,7 @@ public class ManagedServiceRestController {
 
     @PostMapping("init")
     @ResponseStatus(OK)
-    public ServiceTemplateDto init(@Valid @RequestBody ServiceTemplateDto serviceTemplatePayload) {
+    public ServiceTemplateDto init(@Validated @RequestBody ServiceTemplateDto serviceTemplatePayload) {
         return managedServiceFacade.initManagedService(serviceTemplatePayload);
     }
 
@@ -35,13 +35,13 @@ public class ManagedServiceRestController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public String create(@Valid @RequestBody ManagedServicePayload managedServicePayload) {
+    public String create(@Validated @RequestBody ManagedServicePayload managedServicePayload) {
         return managedServiceFacade.createManagedService(managedServicePayload);
     }
 
     @PutMapping
     @ResponseStatus(OK)
-    public void update(@Valid @RequestBody ManagedServicePayload managedServicePayload) {
+    public void update(@Validated @RequestBody ManagedServicePayload managedServicePayload) {
         managedServiceFacade.updateManagedService(managedServicePayload);
     }
 

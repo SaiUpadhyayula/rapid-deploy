@@ -7,7 +7,7 @@ import java.nio.file.Path;
 public interface DockerfileFactory {
     default String createDockerFileContent(Path extractedFilePath, ManifestDefinition manifestDefinition) {
         String dockerFile =
-                "FROM gliderlabs/herokuish:latest" + System.lineSeparator() +
+                "FROM gliderlabs/herokuish:0.5.29" + System.lineSeparator() +
                         "COPY . /app" + System.lineSeparator() +
                         "EXPOSE %s" + System.lineSeparator() +
                         "CMD /build && /start web";

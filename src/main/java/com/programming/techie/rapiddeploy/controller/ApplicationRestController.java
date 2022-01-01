@@ -7,11 +7,11 @@ import com.programming.techie.rapiddeploy.service.application.ApplicationService
 import com.programming.techie.rapiddeploy.service.application.SourceCodeUploadService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
@@ -29,46 +29,42 @@ public class ApplicationRestController {
 
 
     @PostMapping
-    @ResponseStatus(CREATED)
-    public ApplicationResponse create(@Valid @RequestBody ApplicationPayload applicationPayload) {
-        return applicationService.create(applicationPayload);
+    public ResponseEntity<ApplicationResponse> create(@Validated @RequestBody ApplicationPayload applicationPayload) {
+        return ResponseEntity.status(CREATED)
+                .body(applicationService.create(applicationPayload));
     }
 
     @PutMapping
-    @ResponseStatus(OK)
-    public ApplicationResponse update(@Valid @RequestBody ApplicationPayload applicationPayload) {
-        return applicationService.update(applicationPayload);
+    public ResponseEntity<ApplicationResponse> update(@Validated @RequestBody ApplicationPayload applicationPayload) {
+        applicationService.update(applicationPayload);
+        return null;
     }
 
     @GetMapping
-    @ResponseStatus(OK)
-    public List<ApplicationResponse> getAll() {
-        return applicationService.getAll();
+    public ResponseEntity<List<ApplicationResponse>> getAll() {
+        return ResponseEntity.status(OK).body(applicationService.getAll());
     }
 
     @GetMapping("/{guid}")
-    @ResponseStatus(OK)
-    public ApplicationResponse getOne(@PathVariable String guid) {
-        return applicationService.getOne(guid);
+    public ResponseEntity<ApplicationResponse> getOne(@PathVariable String guid) {
+        return ResponseEntity.status(OK).body(applicationService.getOne(guid));
     }
 
     @DeleteMapping
-    @ResponseStatus(NO_CONTENT)
-    public void delete(@RequestParam("guid") String guid) {
+    public ResponseEntity<Void> delete(@RequestParam("guid") String guid) {
         applicationService.delete(guid);
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 
     @GetMapping("/{guid}/start")
-    @ResponseStatus(OK)
-    public String startApplication(@PathVariable String guid) {
-        return applicationService.startApplicationContainer(guid);
+    public ResponseEntity<String> startApplication(@PathVariable String guid) {
+        return ResponseEntity.status(OK).body(applicationService.startApplicationContainer(guid));
     }
 
     @GetMapping("/{guid}/stop")
-    @ResponseStatus(OK)
-    public String stopApplication(@PathVariable String guid) {
+    public ResponseEntity<String> stopApplication(@PathVariable String guid) {
         applicationService.stopApplicationContainer(guid);
-        return "Application Stopped";
+        return ResponseEntity.status(OK).body("Application Stopped");
     }
 
     @PostMapping("/source-code/app/{guid}")
@@ -87,14 +83,14 @@ public class ApplicationRestController {
     }
 
     @GetMapping("/{guid}/container")
-    @ResponseStatus(OK)
-    public String getContainerId(@PathVariable String guid) {
-        return applicationService.getContainerId(guid);
+    public ResponseEntity<String> getContainerId(@PathVariable String guid) {
+        return ResponseEntity.status(OK)
+                .body(applicationService.getContainerId(guid));
     }
 
     @GetMapping("/{appName}/container")
-    @ResponseStatus(OK)
-    public String getContainerIdByAppName(@PathVariable String appName) {
-        return applicationService.getContainerIdByAppName(appName);
+    public ResponseEntity<String> getContainerIdByAppName(@PathVariable String appName) {
+        return ResponseEntity.status(OK)
+                .body(applicationService.getContainerIdByAppName(appName));
     }
 }

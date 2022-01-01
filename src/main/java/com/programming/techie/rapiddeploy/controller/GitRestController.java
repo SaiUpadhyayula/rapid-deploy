@@ -4,11 +4,12 @@ import com.programming.techie.rapiddeploy.payload.GitRequestPayload;
 import com.programming.techie.rapiddeploy.service.git.GitService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-
-import static org.springframework.http.HttpStatus.OK;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/source-code/git")
@@ -19,9 +20,8 @@ public class GitRestController {
     private final GitService gitService;
 
     @PostMapping("/clone")
-    @ResponseStatus(OK)
-    public String clone(@Valid @RequestBody GitRequestPayload gitRequestPayload) {
+    public ResponseEntity<String> clone(@Validated @RequestBody GitRequestPayload gitRequestPayload) {
         gitService.cloneRepository(gitRequestPayload);
-        return "Repository cloned successfully, please wait while the application is being started";
+        return ResponseEntity.ok("Repository cloned successfully, please wait while the application is being started");
     }
 }

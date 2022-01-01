@@ -56,7 +56,8 @@ public class ApplicationBuildService {
                     .withTail(5)
                     .exec(callback)
                     .awaitCompletion(5, SECONDS);
-        } catch (Exception ex) {
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
             throw new RapidDeployException("Exception Occurred when collecting Build Logs");
         }
         return stringBuilder.toString();
