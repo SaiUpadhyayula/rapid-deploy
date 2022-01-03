@@ -80,7 +80,7 @@ public class DockerContainerService {
     }
 
     public Pair<String, String> run(DockerContainerPayload dockerContainerPayload) {
-        String containerName = RAPID_DEPLOY_SERVICE_PREFIX + dockerContainerPayload.getName();
+        String containerName = dockerContainerPayload.getName();
         if (checkIfContainerIsRunning(containerName)) {
             log.info("Container is already with the provided name {}, killing the container", containerName);
             killContainer(containerName);
@@ -90,18 +90,15 @@ public class DockerContainerService {
         Pair<ExposedPort, Ports> portMappings = constructPortMappings(dockerContainerPayload);
         String[] envVarArgs = resolveEnvironmentVariables(dockerContainerPayload);
 
-        List<VolumesFrom> volumesFrom = dockerContainerPayload.getVolumes().stream().map(VolumesFrom::new).collect(toList());
-
         CreateContainerResponse container = dockerClient.createContainerCmd(dockerContainerPayload.getImageId())
                 .withEnv(envVarArgs)
-                .withName(RAPID_DEPLOY_SERVICE_PREFIX + dockerContainerPayload.getName())
+                .withName(dockerContainerPayload.getName())
                 .withExposedPorts(portMappings.getFirst())
                 .withHostConfig(HostConfig.newHostConfig()
                         .withNetworkMode(NETWORK_NAME)
                         .withAutoRemove(true)
-                        .withMounts(createVolumeMount(dockerContainerPayload))
-                        .withPortBindings(portMappings.getSecond())
-                        .withVolumesFrom(volumesFrom))
+                        .withMounts(createVolumeMount(dockerContainerPayload.getVolumeList()))
+                        .withPortBindings(portMappings.getSecond()))
                 .exec();
         dockerClient.startContainerCmd(container.getId()).exec();
         log.info("Container ID - {}", container.getId());
@@ -120,16 +117,15 @@ public class DockerContainerService {
                         .contains("/" + containerName));
     }
 
-    private List<Mount> createVolumeMount(DockerContainerPayload dockerContainerPayload) {
-        if (StringUtils.isNotBlank(dockerContainerPayload.getMountSource())
-                && StringUtils.isNotBlank(dockerContainerPayload.getMountTarget())) {
-            return singletonList(new Mount()
-                    .withType(MountType.BIND)
-                    .withSource(dockerContainerPayload.getMountSource())
-                    .withTarget(dockerContainerPayload.getMountTarget())
-                    .withReadOnly(true));
-        }
-        return Collections.emptyList();
+    private List<Mount> createVolumeMount(List<DockerContainerPayload.Volume> volumes) {
+        return volumes.stream()
+                .filter(volume -> StringUtils.isNotBlank(volume.getMountSource()))
+                .filter(volume -> StringUtils.isNotBlank(volume.getMountTarget()))
+                .map(volume -> new Mount()
+                        .withType(volume.getMountType())
+                        .withSource(volume.getMountSource())
+                        .withTarget(volume.getMountTarget()))
+                .toList();
     }
 
     private Pair<ExposedPort, Ports> constructPortMappings(DockerContainerPayload dockerContainerPayload) {

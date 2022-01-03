@@ -14,9 +14,7 @@ import java.util.List;
 public class ApplicationPayload {
     @NotBlank
     private String applicationName;
-    @NotBlank
     private String guid;
-    @NotBlank
     private Integer port;
     private List<EnvironmentVariables> environmentVariablesList;
 }

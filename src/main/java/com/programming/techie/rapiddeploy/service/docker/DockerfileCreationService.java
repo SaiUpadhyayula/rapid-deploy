@@ -40,7 +40,7 @@ public class DockerfileCreationService {
         String dockerFileContent = dockerfileFactory.createDockerFileContent(extractedFilePath, yamlParsingCompleted.getManifestDefinition());
         File dockerFile = createDockerFile(extractedFilePath, dockerFileContent);
         createProcFile(extractedFilePath, yamlParsingCompleted.getManifestDefinition());
-        applicationOrchestrator.handle(dockerFile, yamlParsingCompleted.getAppGuid());
+        applicationOrchestrator.handle(dockerFile, yamlParsingCompleted);
     }
 
     @SneakyThrows

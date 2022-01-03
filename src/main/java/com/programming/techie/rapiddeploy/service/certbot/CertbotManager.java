@@ -19,18 +19,17 @@ public class CertbotManager {
     private final DockerContainerService dockerContainerService;
 
     public void start() {
-        dockerImageService.pullImage(CERTBOT, "latest");
+        dockerImageService.pullImage(CERTBOT, "v1.22.0");
         String certbotImageId = dockerImageService.getImageId(CERTBOT);
         log.info("Starting Certbot Instance");
 
-//        DockerContainerPayload payload = DockerContainerPayload.builder()
-//                .name(CERTBOT)
-//                .port(80)
-//                .exposedPort(80)
-//                .imageId(certbotImageId)
-//                .environmentVariables(emptyList())
-//                .volumes()
-//                .build();
+        DockerContainerPayload payload = DockerContainerPayload.builder()
+                .name(CERTBOT)
+                .port(80)
+                .exposedPort(80)
+                .imageId(certbotImageId)
+                .environmentVariables(emptyList())
+                .build();
     }
 
     public void ensureServiceIsRunning() {

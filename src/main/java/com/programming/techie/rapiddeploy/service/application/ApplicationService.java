@@ -1,11 +1,13 @@
 package com.programming.techie.rapiddeploy.service.application;
 
+import com.github.dockerjava.api.model.MountType;
 import com.programming.techie.rapiddeploy.exceptions.ApplicationAlreadyExistsException;
 import com.programming.techie.rapiddeploy.exceptions.ApplicationNotFoundException;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.mapper.ApplicationMapper;
 import com.programming.techie.rapiddeploy.model.Application;
 import com.programming.techie.rapiddeploy.model.DockerContainerPayload;
+import com.programming.techie.rapiddeploy.model.DockerContainerPayload.Volume;
 import com.programming.techie.rapiddeploy.model.EnvironmentVariables;
 import com.programming.techie.rapiddeploy.payload.ApplicationPayload;
 import com.programming.techie.rapiddeploy.payload.ApplicationResponse;
@@ -17,10 +19,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static com.programming.techie.rapiddeploy.service.docker.BuildCacheVolumeConstants.BUILD_CACHE_VOLUMES_MAP;
+import static com.programming.techie.rapiddeploy.util.RapidDeployConstants.RAPID_DEPLOY_SERVICE_PREFIX;
 
 @Service
 @AllArgsConstructor
@@ -92,13 +98,15 @@ public class ApplicationService {
         Pair<String, String> container = dockerContainerService.run(DockerContainerPayload.builder()
                 .imageId(imageId)
                 .environmentVariables(environmentVariables)
-                .name(name)
+                .name(RAPID_DEPLOY_SERVICE_PREFIX + name)
                 .port(application.getPort())
                 .exposedPort(application.getPort())
-                .volumes(Collections.emptyList())
+                .volumeList(Collections.singletonList(new Volume(name,
+                        "/tmp/cache/.m2", MountType.VOLUME)))
                 .environmentVariables(application.getEnvironmentVariables())
                 .build());
-
+        nginxService.createConfigFile(RAPID_DEPLOY_SERVICE_PREFIX + name, application.getPort());
+        nginxService.start();
         application.setContainerId(container.getFirst());
         applicationRepository.save(application);
         return container.getFirst();

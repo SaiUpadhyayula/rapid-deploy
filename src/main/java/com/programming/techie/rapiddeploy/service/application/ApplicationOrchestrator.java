@@ -1,8 +1,11 @@
 package com.programming.techie.rapiddeploy.service.application;
 
+import com.github.dockerjava.api.model.MountType;
+import com.programming.techie.rapiddeploy.dto.YamlParsingCompleted;
 import com.programming.techie.rapiddeploy.exceptions.RapidDeployException;
 import com.programming.techie.rapiddeploy.model.Application;
 import com.programming.techie.rapiddeploy.model.DockerContainerPayload;
+import com.programming.techie.rapiddeploy.model.DockerContainerPayload.Volume;
 import com.programming.techie.rapiddeploy.repository.ApplicationRepository;
 import com.programming.techie.rapiddeploy.service.docker.DockerContainerService;
 import com.programming.techie.rapiddeploy.service.docker.DockerImageService;
@@ -13,11 +16,14 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.Collections;
 
 import static com.programming.techie.rapiddeploy.model.ApplicationState.STARTED;
 import static com.programming.techie.rapiddeploy.model.BuildState.IN_PROGRESS;
 import static com.programming.techie.rapiddeploy.model.BuildState.SUCCESS;
+import static com.programming.techie.rapiddeploy.service.docker.BuildCacheVolumeConstants.BUILD_CACHE_VOLUMES_MAP;
+import static com.programming.techie.rapiddeploy.util.RapidDeployConstants.RAPID_DEPLOY_SERVICE_PREFIX;
 import static org.springframework.data.util.Pair.of;
 
 @Service
@@ -30,22 +36,25 @@ public class ApplicationOrchestrator {
     private final DockerContainerService dockerContainerService;
     private final NginxService nginxService;
 
-    public void handle(File file, String appGuid) {
-        Application application = applicationRepository.findByGuid(appGuid)
-                .orElseThrow(() -> new RapidDeployException("No Application found with GUID " + appGuid));
+    public void handle(File file, YamlParsingCompleted parsedYaml) {
+        Application application = applicationRepository.findByGuid(parsedYaml.getAppGuid())
+                .orElseThrow(() -> new RapidDeployException("No Application found with GUID " + parsedYaml.getAppGuid()));
         Pair<String, Application> pair = buildImage(file, application);
         String imageId = pair.getFirst();
         application = pair.getSecond();
-//        dockerPushService.push(imageId);
+
         String containerId = dockerContainerService.run(DockerContainerPayload.builder()
                 .imageId(imageId)
                 .environmentVariables(Collections.emptyList())
-                .name(application.getName())
+                .name(RAPID_DEPLOY_SERVICE_PREFIX + application.getName())
                 .port(application.getPort())
                 .exposedPort(application.getPort())
-                .volumes(Collections.emptyList())
+                .volumeList(Collections.singletonList(new Volume(application.getName(),
+                        BUILD_CACHE_VOLUMES_MAP.get(parsedYaml.getManifestDefinition().getLanguage()),
+                        MountType.VOLUME)))
                 .build()).getFirst();
-//        nginxService.start(false);
+        nginxService.createConfigFile(RAPID_DEPLOY_SERVICE_PREFIX + application.getName(), application.getPort());
+        nginxService.start();
         application.setContainerId(containerId);
         application.setApplicationState(STARTED);
         applicationRepository.save(application);

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
+import static com.programming.techie.rapiddeploy.util.RapidDeployConstants.RAPID_DEPLOY_SERVICE_PREFIX;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -29,9 +31,9 @@ public class ManagedServiceContainerHelper {
         return dockerContainerService.run(DockerContainerPayload.builder()
                 .imageId(imageId)
                 .environmentVariables(managedService.getEnvironmentVariables())
-                .name(managedService.getName())
+                .name(RAPID_DEPLOY_SERVICE_PREFIX + managedService.getName())
                 .port(managedService.getServiceTemplate().getPortNumber())
-                .volumes(Collections.emptyList())
+                .volumeList(Collections.emptyList())
                 .exposedPort(managedService.getServiceTemplate().getPortNumber())
                 .build());
     }
